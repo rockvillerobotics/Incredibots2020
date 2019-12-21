@@ -8,6 +8,6 @@
 |*[master](https://github.com/RockvilleRobotics/Incredibots2019/tree/master)*|[![Build Status](https://travis-ci.com/rockvillerobotics/Incredibots2019.svg?branch=master)](https://travis-ci.com/rockvillerobotics/Incredibots2019)|
 
 ## Our Bots
-No robots yet!
+*Still working on the robots!*
 
 ### DISCLAIMER: We are self taught, but feel free to take stuff. We are still learning.
