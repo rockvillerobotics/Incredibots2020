@@ -1,9 +1,11 @@
 # Codes involving general motor or servo motion go here
-from wallaby import *
 from decorators import *
 import constants as c
 import gyro as g
 import sensors as s
+
+from ctypes import cdll
+kipr = cdll.LoadLibrary("./libwallaby.so")  # Access wallaby commands through kipr object
 
 #------------------------------- Base Commands -------------------------------
 #  These commands start the motors in a certain way. They are just activate motors but in a specific direction.

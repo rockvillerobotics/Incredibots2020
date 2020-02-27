@@ -1,9 +1,11 @@
-from wallaby import *
 import constants as c
 import actions as a
 import gyro as g
 import sensors as s
 import movement as m
+
+from ctypes import cdll
+kipr = cdll.LoadLibrary("./libwallaby.so")  # Access wallaby commands through kipr object
 
 #-------------------------------States------------------------
 

@@ -1,9 +1,11 @@
-from wallaby import *
 from decorators import *
 import constants as c
 import gyro as g
 import movement as m
 import utils as u
+
+from ctypes import cdll
+kipr = cdll.LoadLibrary("./libwallaby.so")  # Access wallaby commands through kipr object
 
 # -----------------------------HOW TO USE LFOLLOW COMMANDS------------------------
 # All lfollow commands follow a certain pattern which if you learn, you can come up

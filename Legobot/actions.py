@@ -1,6 +1,5 @@
-## The bulk of commands should go here
+# The bulk of commands should go here
 
-from wallaby import *
 from decorators import *
 import constants as c
 import movement as m
@@ -8,6 +7,10 @@ import sensors as s
 import utils as u
 import webcam as w
 import gyro as g
+
+from ctypes import cdll
+kipr = cdll.LoadLibrary("./libwallaby.so")  # Access wallaby commands through kipr object
+
 
 @print_function_name
 def get_ambulance():
@@ -48,7 +51,7 @@ def deliver_ambulance_and_blocks():
         g.drive_gyro_through_line_right()
         s.align_far()
         m.open_claw(1, 1, c.CLAW_WAY_OPEN_POS)
-        msleep(500)
+        kipr.msleep(500)
         m.move_arm(c.ARM_HIGH_POS)
         #m.move_claw(c.CLAW_WAY_OPEN_POS)
         #w.close_graphics_window()
@@ -60,7 +63,7 @@ def deliver_ambulance_and_blocks():
         s.left_forwards_until_white(0)
         s.left_forwards_until_black()
         m.open_claw(1, 1, c.CLAW_WAY_OPEN_POS)
-        msleep(500)
+        kipr.msleep(500)
         m.move_arm(c.ARM_HIGH_POS)
         #m.move_claw(c.CLAW_WAY_OPEN_POS)
         u.normalize_speeds()

@@ -2,7 +2,8 @@
 #   Constants are subject to change, so make sure to check the values to be certain that they are right.
 #   Note: All constant timings are assumed to be in milliseconds unless otherwise specified.
 
-from wallaby import *
+from ctypes import cdll
+kipr = cdll.LoadLibrary("./libwallaby.so")  # Access wallaby commands through kipr object
 
 #-------------------------------Clone Bot Definitions------------------------
 # This is used to determine which robot is which based on how many color channels each bot has.

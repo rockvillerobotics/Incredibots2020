@@ -1,7 +1,6 @@
 #!/usr/bin/env python2
 import os
 import sys
-from wallaby import *
 import constants as c
 import actions as a
 import sensors as s
@@ -9,6 +8,10 @@ import movement as m
 import gyro as g
 import webcam as w
 import utils as u
+
+from ctypes import cdll
+kipr = cdll.LoadLibrary("./libwallaby.so")  # Access wallaby commands through kipr object
+
 
 def main():
     print "Starting main()\n"

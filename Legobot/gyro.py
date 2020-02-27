@@ -1,11 +1,12 @@
-from wallaby import *
 from decorators import *
 import constants as c
 import sensors as s
 import movement as m
-import utils as u
 
-#-----------------------Calibration Commands-------------------------------------
+from ctypes import cdll
+kipr = cdll.LoadLibrary("./libwallaby.so")  # Access wallaby commands through kipr object
+
+# -----------------------Calibration Commands-------------------------------------
 # Calibrate gyro "zeroes" the gyro sensor. It determines what the gyro reads when the bot is resting.
 # Determine gyro conversion rate figures out how many degrees the gyro sensor counts during a 360 degree
 # turn and uses that as a basis for all other turns

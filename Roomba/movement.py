@@ -1,6 +1,8 @@
-from wallaby import *
 from decorators import *
 import constants as c
+
+from ctypes import cdll
+kipr = cdll.LoadLibrary("./libwallaby.so")  # Access wallaby commands through kipr object
 
 #-----------------------------Bump Sensors-------------------------
 

@@ -1,9 +1,12 @@
-from wallaby import *
 from decorators import *
 import constants as c
 import sensors as s
 import movement as m
 import utils as u
+
+from ctypes import cdll
+kipr = cdll.LoadLibrary("./libwallaby.so")  # Access wallaby commands through kipr object
+
 
 @print_function_name
 def calibrate_gyro():

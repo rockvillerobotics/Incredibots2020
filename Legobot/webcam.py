@@ -1,4 +1,3 @@
-from wallaby import *
 from decorators import *
 import constants as c
 import movement as m
@@ -6,6 +5,7 @@ import actions as a
 import sensors as s
 from rgb import YELLOW
 from rgb import RED
+
 
 def initialize_camera():
     # Wait two seconds for camera to initialize

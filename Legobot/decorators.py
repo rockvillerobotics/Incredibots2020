@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-import os
-import sys
 import functools  # You need to this import to use decorators on functions with parameters.
 
 """
