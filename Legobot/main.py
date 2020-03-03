@@ -13,12 +13,9 @@ import utils as u
 def main():
     print "Starting main()\n"
     u.setup()
-    u.calibrate()
-    a.get_ambulance()
-    a.get_blocks()
-    a.deliver_ambulance_and_blocks()
-    #a.get_firefighters()
-    #a.deliver_firefighters()
+    # u.calibrate()  # Calibrates tophats and motor values
+    # Put the commands you want the robot to run here.
+    
     u.shutdown()
 
 if __name__ == "__main__":
