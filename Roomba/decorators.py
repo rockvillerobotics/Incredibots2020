@@ -6,13 +6,10 @@ import functools  # You need to this import to use decorators on functions with 
 """
 Note: Each decorator takes a function as an input. See the function/argument example file for
 more information on this.
-
 The syntax is as follows:
-
 @decorator_name
 def function_name():
     put_code_here
-
 """
 
 # ~~~~ The Decorators ~~~~

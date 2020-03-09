@@ -1,4 +1,3 @@
-
 from wallaby import *
 from decorators import *
 import constants as c
@@ -2631,5 +2630,3 @@ def debug_rfcliff():
     else:
          print "Error in defining isRightOnBlack and isRightOnWhite"
          exit(86)
-
-
