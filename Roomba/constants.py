@@ -7,11 +7,12 @@ NO_CURRENT_VALUE = 7
 # Motor Ports (Not real - made to be consistent with Legobot)
 LEFT_MOTOR = 2
 RIGHT_MOTOR = 3
-ARM_MOTOR = NO_CURRENT_VALUE
+ARM_MOTOR = 0
 
 # Running Motor Powers
 CURRENT_LM_POWER = 0
 CURRENT_RM_POWER = 0
+CURRENT_CM_POWer = 0
 #---------------------------------------------Servos-------------------------------------------
 
 # Servo Port
