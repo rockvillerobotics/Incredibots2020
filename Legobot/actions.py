@@ -21,5 +21,3 @@ def pull_swings():
     g.backwards_gyro(1000)
 
 # Should get 100 points, but need build to be completed first. 
-
-# Test with VSCode
