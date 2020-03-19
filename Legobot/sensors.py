@@ -35,50 +35,47 @@ import utils as u
 
 # -------------------------------States------------------------
 
-def isLeftOnBlack():
+def black_left():
     return(analog(c.LEFT_TOPHAT) > c.LEFT_TOPHAT_BW)
 
-def isLeftOnWhite():
+def white_left():
     return(analog(c.LEFT_TOPHAT) < c.LEFT_TOPHAT_BW)
 
-def isRightOnBlack():
+def black_right():
     return(analog(c.RIGHT_TOPHAT) > c.RIGHT_TOPHAT_BW)
 
-def isRightOnWhite():
+def white_right():
     return(analog(c.RIGHT_TOPHAT) < c.RIGHT_TOPHAT_BW)
 
-def isThirdOnBlack():
+def black_third():
     return(analog(c.THIRD_TOPHAT) > c.THIRD_TOPHAT_BW)
 
-def isThirdOnWhite():
+def white_third():
     return(analog(c.THIRD_TOPHAT) < c.THIRD_TOPHAT_BW)
 
-def isThirdOnMiddle():
-    return(analog(c.THIRD_TOPHAT) < (c.MIN_TOPHAT_VALUE_THIRD - 10))
-
-def isFourthOnBlack():
+def black_fourth():
     return(analog(c.FOURTH_TOPHAT) > c.FOURTH_TOPHAT_BW)
 
-def isFourthOnWhite():
+def white_fourth():
     return(analog(c.FOURTH_TOPHAT) < c.FOURTH_TOPHAT_BW)
 
-def isLeftLimitSwitchPressed():
+def pressed_left():
     return(digital(c.LEFT_LIMIT_SWITCH) == 1)
 
-def isLeftLimitSwitchNotPressed():
+def unpressed_left():
     return(digital(c.LEFT_LIMIT_SWITCH) == 0)
 
-def isRightLimitSwitchPressed():
+def pressed_right():
     return(digital(c.RIGHT_LIMIT_SWITCH) == 1)
 
-def isRightLimitSwitchNotPressed():
+def unpressed_right():
     return(digital(c.RIGHT_LIMIT_SWITCH) == 0)
 
-def areLimitSwitchesPressed():
-    return(isLeftLimitSwitchPressed() or isRightLimitSwitchPressed())
+def pressed_both():
+    return(pressed_left() or pressed_right())
 
-def areLimitSwitchesNotPressed():
-    return(not(isLeftLimitSwitchPressed() or isRightLimitSwitchPressed()))
+def unpressed_either():
+    return(not(pressed_left() or pressed_right()))
 
 # -------------------------------Wait Until Event Commands--------------------
 
@@ -91,7 +88,7 @@ def wait_until(boolean_function, time=c.SAFETY_TIME):
 
 
 def wait_until_black_left(time=c.SAFETY_TIME):
-    wait_until(isLeftOnBlack, time)
+    wait_until(black_left, time)
 
 
 def wait_until_white_left(time=c.SAFETY_TIME):
@@ -99,33 +96,33 @@ def wait_until_white_left(time=c.SAFETY_TIME):
 
 
 def wait_until_black_right(time=c.SAFETY_TIME):
-    wait_until(isRightOnBlack, time)
+    wait_until(black_right, time)
 
 
 def wait_until_white_right(time=c.SAFETY_TIME):
-    wait_until(isRightOnWhite, time)
+    wait_until(white_right, time)
 
 
 def wait_until_black_third(time=c.SAFETY_TIME):
-    wait_until(isThirdOnBlack, time)
+    wait_until(black_third, time)
 
 
 def wait_until_white_third(time=c.SAFETY_TIME):
-    wait_until(isThirdOnWhite, time)
+    wait_until(white_third, time)
 
 
 def wait_until_limit_switch_is_pressed(time=c.SAFETY_TIME):
-    wait_until(isLeftLimitSwitchPressed, time)
+    wait_until(pressed_left, time)
 
 
 def wait_until_limit_switch_is_not_pressed(time=c.SAFETY_TIME):
-    wait_until(isLeftLimitSwitchNotPressed, time)
+    wait_until(unpressed_left, time)
 
 def wait_until_limit_switches_are_pressed(time=c.SAFETY_TIME):
-    wait_until(areLimitSwitchesPressed, time)
+    wait_until(pressed_both, time)
 
 def wait_until_limit_switches_are_not_pressed(time=c.SAFETY_TIME):
-    wait_until(areLimitSwitchesNotPressed, time)
+    wait_until(unpressed_either, time)
 
 # -------------------------------Basic Align Commands ------------------------
 
@@ -602,17 +599,17 @@ def drive_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
 
 @print_function_name_with_arrows
 def drive_until_black_left(time=c.SAFETY_TIME, should_stop=True):
-    drive_until(isLeftOnBlack, time, should_stop)
+    drive_until(black_left, time, should_stop)
 
 
 @print_function_name_with_arrows
 def drive_until_black_right(time=c.SAFETY_TIME, should_stop=True):
-    drive_until(isRightOnBlack, time, should_stop)
+    drive_until(black_right, time, should_stop)
 
 
 @print_function_name_with_arrows
 def drive_until_black_third(time=c.SAFETY_TIME, should_stop=True):
-    drive_until(isThirdOnBlack, time, should_stop)
+    drive_until(black_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -622,7 +619,7 @@ def drive_until_black(time=c.SAFETY_TIME, should_stop=True):
         should_stop = False
         time = c.SAFETY_TIME
     sec = seconds() + time / 1000.0
-    while seconds() < sec and isLeftOnWhite() and isRightOnWhite():
+    while seconds() < sec and isLeftOnWhite() and white_right():
         msleep(1)
     if should_stop:
         m.deactivate_motors()
@@ -635,7 +632,7 @@ def drive_until_both_black(time=c.SAFETY_TIME, should_stop=True):
         should_stop = False
         time = c.SAFETY_TIME
     sec = seconds() + time / 1000.0
-    while seconds() < sec and (isLeftOnWhite() or isRightOnWhite()):
+    while seconds() < sec and (isLeftOnWhite() or white_right()):
         msleep(1)
     if should_stop:
         m.deactivate_motors()
@@ -648,12 +645,12 @@ def drive_until_white_left(time=c.SAFETY_TIME, should_stop=True):
 
 @print_function_name_with_arrows
 def drive_until_white_right(time=c.SAFETY_TIME, should_stop=True):
-    drive_until(isRightOnWhite, time, should_stop)
+    drive_until(white_right, time, should_stop)
 
 
 @print_function_name_with_arrows
 def drive_until_white_third(time=c.SAFETY_TIME, should_stop=True):
-    drive_until(isThirdOnWhite, time, should_stop)
+    drive_until(white_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -663,7 +660,7 @@ def drive_until_white(time=c.SAFETY_TIME, should_stop=True):
         should_stop = False
         time = c.SAFETY_TIME
     sec = seconds() + time / 1000.0
-    while seconds() < sec and isLeftOnBlack() and isRightOnBlack():
+    while seconds() < sec and black_left() and black_right():
         msleep(1)
     if should_stop:
         m.deactivate_motors()
@@ -676,7 +673,7 @@ def drive_until_both_white(time=c.SAFETY_TIME, should_stop=True):
         should_stop = False
         time = c.SAFETY_TIME
     sec = seconds() + time / 1000.0
-    while seconds() < sec and (isLeftOnBlack() or isRightOnBlack()):
+    while seconds() < sec and (black_left() or black_right()):
         msleep(1)
     if should_stop:
         m.deactivate_motors()
@@ -721,17 +718,17 @@ def backwards_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
 
 @print_function_name_with_arrows
 def backwards_until_black_left(time=c.SAFETY_TIME, should_stop=True):
-    backwards_until(isLeftOnBlack, time, should_stop)
+    backwards_until(black_left, time, should_stop)
 
 
 @print_function_name_with_arrows
 def backwards_until_black_right(time=c.SAFETY_TIME, should_stop=True):
-    backwards_until(isRightOnBlack, time, should_stop)
+    backwards_until(black_right, time, should_stop)
 
 
 @print_function_name_with_arrows
 def backwards_until_black_third(time=c.SAFETY_TIME, should_stop=True):
-    backwards_until(isThirdOnBlack, time, should_stop)
+    backwards_until(black_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -741,12 +738,12 @@ def backwards_until_white_left(time=c.SAFETY_TIME, should_stop=True):
 
 @print_function_name_with_arrows
 def backwards_until_white_right(time=c.SAFETY_TIME, should_stop=True):
-    backwards_until(isRightOnWhite, time, should_stop)
+    backwards_until(white_right, time, should_stop)
 
 
 @print_function_name_with_arrows
 def backwards_until_white_third(time=c.SAFETY_TIME, should_stop=True):
-    backwards_until(isThirdOnWhite, time, should_stop)
+    backwards_until(white_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -756,7 +753,7 @@ def backwards_until_white(time=c.SAFETY_TIME, should_stop=True):
         should_stop = False
         time = c.SAFETY_TIME
     sec = seconds() + time / 1000.0
-    while seconds() < sec and isRightOnBlack() and isLeftOnBlack():
+    while seconds() < sec and black_right() and black_left():
         msleep(1)
     if should_stop:
         m.deactivate_motors()
@@ -769,7 +766,7 @@ def backwards_until_both_white(time=c.SAFETY_TIME, should_stop=True):
         should_stop = False
         time = c.SAFETY_TIME
     sec = seconds() + time / 1000.0
-    while seconds() < sec and isRightOnBlack() or isLeftOnBlack():
+    while seconds() < sec and black_right() or black_left():
         msleep(1)
     if should_stop:
         m.deactivate_motors()
@@ -795,7 +792,7 @@ def backwards_through_line_right(time=c.SAFETY_TIME, should_stop=True):
 #-------------------------- Base Line Follow Commands -----------------------
 
 def base_lfollow_left():
-    if isLeftOnBlack():
+    if black_left():
         mav(c.RIGHT_MOTOR, 0)
         m.av(c.LEFT_MOTOR, c.BASE_LM_POWER)
     elif isLeftOnWhite():
@@ -805,7 +802,7 @@ def base_lfollow_left():
 
 
 def base_lfollow_left_inside_line():
-    if isLeftOnBlack():
+    if black_left():
         mav(c.LEFT_MOTOR, 0)
         m.av(c.RIGHT_MOTOR, c.BASE_RM_POWER)
     elif isLeftOnWhite():
@@ -815,47 +812,47 @@ def base_lfollow_left_inside_line():
 
 
 def base_lfollow_right():
-    if isRightOnBlack():
+    if black_right():
         mav(c.LEFT_MOTOR, 0)
         m.av(c.RIGHT_MOTOR, c.BASE_RM_POWER)
-    elif isRightOnWhite():
+    elif white_right():
         mav(c.RIGHT_MOTOR, 0)
         m.av(c.LEFT_MOTOR, c.BASE_LM_POWER)
     msleep(c.LFOLLOW_REFRESH_RATE)
 
 
 def base_lfollow_right_inside_line():
-    if isRightOnBlack():
+    if black_right():
         mav(c.RIGHT_MOTOR, 0)
         m.av(c.LEFT_MOTOR, c.BASE_LM_POWER)
-    elif isRightOnWhite():
+    elif white_right():
         mav(c.LEFT_MOTOR, 0)
         m.av(c.RIGHT_MOTOR, c.BASE_RM_POWER)
     msleep(c.LFOLLOW_REFRESH_RATE)
 
 
 def base_lfollow_backwards_bot_right():
-    if isThirdOnBlack():
+    if black_third():
         mav(c.LEFT_MOTOR, 0)
         m.av(c.RIGHT_MOTOR, -1 * c.BASE_RM_POWER)
-    elif isThirdOnWhite():
+    elif white_third():
         mav(c.RIGHT_MOTOR, 0)
         m.av(c.LEFT_MOTOR, -1 * c.BASE_LM_POWER)
     msleep(c.LFOLLOW_REFRESH_RATE)
 
 
 def base_lfollow_backwards_bot_left():
-    if isThirdOnWhite():
+    if white_third():
         mav(c.LEFT_MOTOR, 0)
         m.av(c.RIGHT_MOTOR, -1 * c.BASE_RM_POWER)
-    elif isThirdOnBlack():
+    elif black_third():
         mav(c.RIGHT_MOTOR, 0)
         m.av(c.LEFT_MOTOR, -1 * c.BASE_LM_POWER)
     msleep(c.LFOLLOW_REFRESH_RATE)
 
 
 def base_lfollow_left_smooth():
-    if isLeftOnBlack():
+    if black_left():
         m.activate_motors(c.BASE_LM_POWER, c.LFOLLOW_SMOOTH_RM_POWER)
     else:
         m.activate_motors(c.LFOLLOW_SMOOTH_LM_POWER, c.BASE_RM_POWER)
@@ -863,7 +860,7 @@ def base_lfollow_left_smooth():
 
 
 def base_lfollow_left_inside_line_smooth():
-    if isLeftOnBlack():
+    if black_left():
         m.activate_motors(c.LFOLLOW_SMOOTH_LM_POWER, c.BASE_RM_POWER)
     else:
         m.activate_motors(c.BASE_LM_POWER, c.LFOLLOW_SMOOTH_RM_POWER)
@@ -871,35 +868,35 @@ def base_lfollow_left_inside_line_smooth():
 
 
 def base_lfollow_right_smooth():
-    if isRightOnBlack():
+    if black_right():
         m.activate_motors(c.LFOLLOW_SMOOTH_LM_POWER, c.BASE_RM_POWER)
-    elif isRightOnWhite():
+    elif white_right():
         m.activate_motors(c.BASE_LM_POWER, c.LFOLLOW_SMOOTH_RM_POWER)
     msleep(c.LFOLLOW_REFRESH_RATE)
 
 
 def base_lfollow_right_inside_line_smooth():
-    if isRightOnBlack():
+    if black_right():
         m.activate_motors(c.BASE_LM_POWER, c.LFOLLOW_SMOOTH_RM_POWER)
-    elif isRightOnWhite():
+    elif white_right():
         m.activate_motors(c.LFOLLOW_SMOOTH_LM_POWER, c.BASE_RM_POWER)
     msleep(c.LFOLLOW_REFRESH_RATE)
 
 
 def base_lfollow_backwards_smooth_bot_right():
     # This is the right side of the line from the bot's point of view.
-    if isThirdOnBlack():
+    if black_third():
         m.activate_motors(-1 * c.BASE_LM_POWER, -1 * c.LFOLLOW_SMOOTH_RM_POWER)
-    elif isThirdOnWhite():
+    elif white_third():
         m.activate_motors(-1 * c.LFOLLOW_SMOOTH_LM_POWER, -1 * c.BASE_RM_POWER)
     msleep(c.LFOLLOW_REFRESH_RATE)
 
 
 def base_lfollow_backwards_smooth_bot_left():
     # This is the left side of the line from the bot's point of view.
-    if isThirdOnBlack():
+    if black_third():
         m.activate_motors(-1 *  c.LFOLLOW_SMOOTH_LM_POWER, -1 * c.BASE_RM_POWER)
-    elif isThirdOnWhite():
+    elif white_third():
         m.activate_motors(-1 * c.BASE_LM_POWER, -1 * c.LFOLLOW_SMOOTH_RM_POWER)
     msleep(c.LFOLLOW_REFRESH_RATE)
 
@@ -991,12 +988,12 @@ def lfollow_both(time=c.SAFETY_TIME, should_stop=True):
         time = c.SAFETY_TIME
     sec = seconds() + time / 1000.0
     while seconds() < sec:
-        if isRightOnBlack() and isLeftOnBlack():
+        if black_right() and black_left():
             m.drive_no_print(30)
-        elif isRightOnBlack() and isLeftOnWhite():
+        elif black_right() and isLeftOnWhite():
             mav(c.RIGHT_MOTOR, 0)
             m.av(c.LEFT_MOTOR, c.BASE_LM_POWER)
-        elif isRightOnWhite() and isLeftOnBlack():
+        elif white_right() and black_left():
             mav(c.RIGHT_MOTOR, 0)
             m.av(c.RIGHT_MOTOR, c.BASE_RM_POWER)
         msleep(c.LFOLLOW_REFRESH_RATE)
@@ -1021,25 +1018,25 @@ def lfollow_left_until(condition, time=c.SAFETY_TIME, should_stop=True):
 @print_function_name_with_arrows
 def lfollow_left_until_black_right(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the left tophat until right tophat senses black or time is reached.
-    lfollow_left_until(isRightOnBlack, time, should_stop)
+    lfollow_left_until(black_right, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_left_until_black_third(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the left tophat until third tophat senses black or time is reached.
-    lfollow_left_until(isThirdOnBlack, time, should_stop)
+    lfollow_left_until(black_third, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_left_until_white_right(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the left tophat until right tophat senses white or time is reached.
-    lfollow_left_until(isRightOnWhite, time, should_stop)
+    lfollow_left_until(white_right, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_left_until_white_third(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the left tophat until third tophat senses white or time is reached.
-    lfollow_left_until(isThirdOnWhite, time, should_stop)
+    lfollow_left_until(white_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1058,25 +1055,25 @@ def lfollow_left_inside_line_until(condition, time=c.SAFETY_TIME, should_stop=Tr
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_black_right(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the left tophat inside the line until the right tophat senses black or time is reached.
-    lfollow_left_inside_line_until(isRightOnBlack)
+    lfollow_left_inside_line_until(black_right)
 
 
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_black_third(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the left tophat inside the line until the right tophat senses black or time is reached.
-    lfollow_left_inside_line_until(isThirdOnBlack)
+    lfollow_left_inside_line_until(black_third)
 
 
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_white_right(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the left tophat inside the line until the right tophat senses white or time is reached.
-    lfollow_left_inside_line_until(isRightOnWhite)
+    lfollow_left_inside_line_until(white_right)
 
 
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_white_third(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the left tophat inside the line until the right tophat senses white or time is reached.
-    lfollow_left_inside_line_until(isThirdOnWhite)
+    lfollow_left_inside_line_until(white_third)
 
 
 @print_function_name_with_arrows
@@ -1095,13 +1092,13 @@ def lfollow_right_until(condition, time=c.SAFETY_TIME, should_stop=True):
 @print_function_name_with_arrows
 def lfollow_right_until_black_left(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the right tophat until left tophat senses black or time is reached.
-    lfollow_right_until(isLeftOnBlack, time, should_stop)
+    lfollow_right_until(black_left, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_right_until_black_third(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the right tophat until left tophat senses black or time is reached.
-    lfollow_right_until(isThirdOnBlack, time, should_stop)
+    lfollow_right_until(black_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1113,7 +1110,7 @@ def lfollow_right_until_white_left(time=c.SAFETY_TIME, should_stop=True):
 @print_function_name_with_arrows
 def lfollow_right_until_white_third(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the right tophat until third tophat senses white or time is reached.
-    lfollow_right_until(isThirdOnWhite, time, should_stop)
+    lfollow_right_until(white_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1132,13 +1129,13 @@ def lfollow_right_inside_line_until(condition, time=c.SAFETY_TIME, should_stop=T
 @print_function_name_with_arrows
 def lfollow_right_inside_line_until_black_left(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the right tophat inside the line until the left tophat senses black or time is reached.
-    lfollow_right_inside_line_until(isLeftOnBlack, time, should_stop)
+    lfollow_right_inside_line_until(black_left, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_right_inside_line_until_black_third(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the right tophat inside the line until the third tophat senses black or time is reached.
-    lfollow_right_inside_line_until(isThirdOnBlack, time, should_stop)
+    lfollow_right_inside_line_until(black_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1150,7 +1147,7 @@ def lfollow_right_inside_line_until_white_left(time=c.SAFETY_TIME, should_stop=T
 @print_function_name_with_arrows
 def lfollow_right_inside_line_until_white_third(time=c.SAFETY_TIME, should_stop=True):
     # Line follow with the right tophat inside the line until the third tophat senses white or time is reached.
-    lfollow_right_inside_line_until(isThirdOnWhite, time, should_stop)
+    lfollow_right_inside_line_until(white_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1169,13 +1166,13 @@ def lfollow_backwards_bot_left_until(condition, time=c.SAFETY_TIME, should_stop=
 @print_function_name_with_arrows
 def lfollow_backwards_bot_left_until_black_left(time=c.SAFETY_TIME, should_stop=True):
     # Line follow backwards with the third tophat until time is reached or the left tophat senses black.
-    lfollow_backwards_bot_left_until(isLeftOnBlack, time, should_stop)
+    lfollow_backwards_bot_left_until(black_left, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_backwards_bot_left_until_black_right(time=c.SAFETY_TIME, should_stop=True):
     # Line follow backwards with the third tophat until time is reached or the right tophat senses black.
-    lfollow_backwards_bot_left_until(isRightOnBlack, time, should_stop)
+    lfollow_backwards_bot_left_until(black_right, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1187,7 +1184,7 @@ def lfollow_backwards_bot_left_until_white_left(time=c.SAFETY_TIME, should_stop=
 @print_function_name_with_arrows
 def lfollow_backwards_bot_left_until_white_right(time=c.SAFETY_TIME, should_stop=True):
     # Line follow backwards with the third tophat until time is reached or the right tophat senses white.
-    lfollow_backwards_bot_left_until(isRightOnWhite, time, should_stop)
+    lfollow_backwards_bot_left_until(white_right, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1206,13 +1203,13 @@ def lfollow_backwards_bot_right_until(condition, time=c.SAFETY_TIME, should_stop
 @print_function_name_with_arrows
 def lfollow_backwards_bot_right_until_black_left(time=c.SAFETY_TIME, should_stop=True):
     # Line follow backwards with the third tophat until time is reached or the left tophat senses black.
-    lfollow_backwards_bot_right_until(isLeftOnBlack, time, should_stop)
+    lfollow_backwards_bot_right_until(black_left, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_backwards_bot_right_until_black_right(time=c.SAFETY_TIME, should_stop=True):
     # Line follow backwards with the third tophat until time is reached or the right tophat senses black.
-    lfollow_backwards_bot_right_until(isRightOnBlack, time, should_stop)
+    lfollow_backwards_bot_right_until(black_right, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1224,7 +1221,7 @@ def lfollow_backwards_bot_right_until_white_left(time=c.SAFETY_TIME, should_stop
 @print_function_name_with_arrows
 def lfollow_backwards_bot_right_until_white_right(time=c.SAFETY_TIME, should_stop=True):
     # Line follow backwards with the third tophat until time is reached or the right tophat senses white.
-    lfollow_backwards_bot_right_until(isRightOnWhite, time, should_stop)
+    lfollow_backwards_bot_right_until(white_right, time, should_stop)
 
 #----------------- Smooth Line Follow Commands -----------------------------------------------
 
@@ -1322,25 +1319,25 @@ def lfollow_left_smooth_until(condition, time=c.SAFETY_TIME, should_stop=True):
 @print_function_name_with_arrows
 def lfollow_left_until_black_right_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the left tophat until right tophat senses black or time is reached.
-    lfollow_left_smooth_until(isRightOnBlack, time, should_stop)
+    lfollow_left_smooth_until(black_right, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_left_until_black_third_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the left tophat until third tophat senses black or time is reached.
-    lfollow_left_smooth_until(isThirdOnBlack, time, should_stop)
+    lfollow_left_smooth_until(black_third, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_left_until_white_right_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the left tophat until right tophat senses black or time is reached.
-    lfollow_left_smooth_until(isRightOnWhite, time, should_stop)
+    lfollow_left_smooth_until(white_right, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_left_until_white_third_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the left tophat until third tophat senses black or time is reached.
-    lfollow_left_smooth_until(isThirdOnWhite, time, should_stop)
+    lfollow_left_smooth_until(white_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1358,25 +1355,25 @@ def lfollow_left_inside_line_smooth_until(condition, time=c.SAFETY_TIME, should_
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_black_right_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the left tophat until right tophat senses black or time is reached.
-    lfollow_left_inside_line_smooth_until(isRightOnBlack, time, should_stop)
+    lfollow_left_inside_line_smooth_until(black_right, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_black_third_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the left tophat until third tophat senses black or time is reached.
-    lfollow_left_inside_line_smooth_until(isThirdOnBlack, time, should_stop)
+    lfollow_left_inside_line_smooth_until(black_third, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_white_right_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the left tophat until right tophat senses black or time is reached.
-    lfollow_left_inside_line_smooth_until(isRightOnWhite, time, should_stop)
+    lfollow_left_inside_line_smooth_until(white_right, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_white_third_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the left tophat until third tophat senses black or time is reached.
-    lfollow_left_inside_line_smooth_until(isThirdOnWhite, time, should_stop)
+    lfollow_left_inside_line_smooth_until(white_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1394,13 +1391,13 @@ def lfollow_right_smooth_until(condition, time=c.SAFETY_TIME, should_stop=True):
 @print_function_name_with_arrows
 def lfollow_right_until_black_left_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until right tophat senses black or time is reached.
-    lfollow_right_smooth_until(isLeftOnBlack, time, should_stop)
+    lfollow_right_smooth_until(black_left, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_right_until_black_third_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until third tophat senses black or time is reached.
-    lfollow_right_smooth_until(isThirdOnBlack, time, should_stop)
+    lfollow_right_smooth_until(black_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1412,7 +1409,7 @@ def lfollow_right_until_white_left_smooth(time=c.SAFETY_TIME, should_stop=True):
 @print_function_name_with_arrows
 def lfollow_right_until_white_third_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until third tophat senses black or time is reached.
-    lfollow_right_smooth_until(isThirdOnWhite, time, should_stop)
+    lfollow_right_smooth_until(white_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1430,13 +1427,13 @@ def lfollow_right_inside_line_smooth_until(condition, time=c.SAFETY_TIME, should
 @print_function_name_with_arrows
 def lfollow_right_inside_line_until_black_left_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until right tophat senses black or time is reached.
-    lfollow_right_inside_line_smooth_until(isLeftOnBlack, time, should_stop)
+    lfollow_right_inside_line_smooth_until(black_left, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_right_inside_line_until_black_third_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until third tophat senses black or time is reached.
-    lfollow_right_inside_line_smooth_until(isThirdOnBlack, time, should_stop)
+    lfollow_right_inside_line_smooth_until(black_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1448,7 +1445,7 @@ def lfollow_right_inside_line_until_white_left_smooth(time=c.SAFETY_TIME, should
 @print_function_name_with_arrows
 def lfollow_right_inside_line_until_white_third_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until third tophat senses black or time is reached.
-    lfollow_right_inside_line_smooth_until(isThirdOnWhite, time, should_stop)
+    lfollow_right_inside_line_smooth_until(white_third, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1466,13 +1463,13 @@ def lfollow_backwards_bot_left_smooth_until(condition, time=c.SAFETY_TIME, shoul
 @print_function_name_with_arrows
 def lfollow_backwards_bot_left_until_black_left_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until right tophat senses black or time is reached.
-    lfollow_backwards_bot_left_smooth_until(isLeftOnBlack, time, should_stop)
+    lfollow_backwards_bot_left_smooth_until(black_left, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_backwards_bot_left_until_black_right_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until third tophat senses black or time is reached.
-    lfollow_backwards_bot_left_smooth_until(isRightOnBlack, time, should_stop)
+    lfollow_backwards_bot_left_smooth_until(black_right, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1484,7 +1481,7 @@ def lfollow_backwards_bot_left_until_white_left_smooth(time=c.SAFETY_TIME, shoul
 @print_function_name_with_arrows
 def lfollow_backwards_bot_left_until_white_right_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until third tophat senses black or time is reached.
-    lfollow_backwards_bot_left_smooth_until(isRightOnWhite, time, should_stop)
+    lfollow_backwards_bot_left_smooth_until(white_right, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1502,13 +1499,13 @@ def lfollow_backwards_bot_right_smooth_until(condition, time=c.SAFETY_TIME, shou
 @print_function_name_with_arrows
 def lfollow_backwards_bot_right_until_black_left_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until right tophat senses black or time is reached.
-    lfollow_backwards_bot_right_smooth_until(isLeftOnBlack, time, should_stop)
+    lfollow_backwards_bot_right_smooth_until(black_left, time, should_stop)
 
 
 @print_function_name_with_arrows
 def lfollow_backwards_bot_right_until_black_right_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until third tophat senses black or time is reached.
-    lfollow_backwards_bot_right_smooth_until(isRightOnBlack, time, should_stop)
+    lfollow_backwards_bot_right_smooth_until(black_right, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -1520,7 +1517,7 @@ def lfollow_backwards_bot_right_until_white_left_smooth(time=c.SAFETY_TIME, shou
 @print_function_name_with_arrows
 def lfollow_backwards_bot_right_until_white_right_smooth(time=c.SAFETY_TIME, should_stop=True):
     # Line follow smoothly with the right tophat until third tophat senses black or time is reached.
-    lfollow_backwards_bot_right_smooth_until(isRightOnWhite, time, should_stop)
+    lfollow_backwards_bot_right_smooth_until(white_right, time, should_stop)
 
 #----------------- PID Line Follow Commands --------------------------------------------------
 # Line follow commans that use a proportional, integral, derivative control algorithim. Basically, the farther away
@@ -1746,22 +1743,22 @@ def lfollow_left_pid_until(boolean_function, time=c.SAFETY_TIME, should_stop=Tru
 
 @print_function_name_with_arrows
 def lfollow_left_pid_until_black_right(time=c.SAFETY_TIME, should_open_and_close_micro=False, should_stop=True, bias=0):
-    lfollow_left_pid_until(isRightOnBlack, time, should_stop, bias, should_open_and_close_micro)
+    lfollow_left_pid_until(black_right, time, should_stop, bias, should_open_and_close_micro)
 
 
 @print_function_name_with_arrows
 def lfollow_left_pid_until_black_third(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_left_pid_until(boolean_function=isThirdOnBlack, time=time, should_stop=should_stop, bias=bias)
+    lfollow_left_pid_until(boolean_function=black_third, time=time, should_stop=should_stop, bias=bias)
 
 
 @print_function_name_with_arrows
 def lfollow_left_pid_until_white_right(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_left_pid_until(isRightOnWhite, time, should_stop, bias)
+    lfollow_left_pid_until(white_right, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
 def lfollow_left_pid_until_white_third(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_left_pid_until(isThirdOnWhite, time, should_stop, bias)
+    lfollow_left_pid_until(white_third, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
@@ -1805,22 +1802,22 @@ def lfollow_left_inside_line_pid_until(boolean_function, time=c.SAFETY_TIME, sho
 
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_black_right_pid(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_left_inside_line_pid_until(isRightOnBlack, time, should_stop, bias)
+    lfollow_left_inside_line_pid_until(black_right, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_black_third_pid(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_left_inside_line_pid_until(isThirdOnBlack, time, should_stop, bias)
+    lfollow_left_inside_line_pid_until(black_third, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_white_right_pid(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_left_inside_line_pid_until(isRightOnWhite, time, should_stop, bias)
+    lfollow_left_inside_line_pid_until(white_right, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
 def lfollow_left_inside_line_until_white_third_pid(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_left_inside_line_pid_until(isThirdOnWhite, time, should_stop, bias)
+    lfollow_left_inside_line_pid_until(white_third, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
@@ -1859,12 +1856,12 @@ def lfollow_right_pid_until(boolean_function, time=c.SAFETY_TIME, should_stop=Tr
 
 @print_function_name_with_arrows
 def lfollow_right_pid_until_black_left(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_right_pid_until(isLeftOnBlack, time, should_stop, bias)
+    lfollow_right_pid_until(black_left, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
 def lfollow_right_pid_until_black_thirs(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_right_pid_until(isThirdOnBlack, time, should_stop, bias)
+    lfollow_right_pid_until(black_third, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
@@ -1874,7 +1871,7 @@ def lfollow_right_pid_until_white_left(time=c.SAFETY_TIME, should_stop=True, bia
 
 @print_function_name_with_arrows
 def lfollow_right_pid_until_white_third(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_right_pid_until(isThirdOnWhite, time, should_stop, bias)
+    lfollow_right_pid_until(white_third, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
@@ -1947,12 +1944,12 @@ def lfollow_right_inside_line_pid_until(boolean_function, time=c.SAFETY_TIME, sh
 
 @print_function_name_with_arrows
 def lfollow_right_inside_line_pid_until_black_left(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_right_inside_line_pid_until(isLeftOnBlack, time, should_stop, bias)
+    lfollow_right_inside_line_pid_until(black_left, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
 def lfollow_right_inside_line_pid_until_black_third(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_right_inside_line_pid_until(isThirdOnBlack, time, should_stop, bias)
+    lfollow_right_inside_line_pid_until(black_third, time, should_stop, bias)
 
 
 @print_function_name_with_arrows
@@ -1962,25 +1959,25 @@ def lfollow_right_inside_line_pid_until_white_left(time=c.SAFETY_TIME, should_st
 
 @print_function_name_with_arrows
 def lfollow_right_inside_line_pid_until_white_third(time=c.SAFETY_TIME, should_stop=True, bias=0):
-    lfollow_right_inside_line_pid_until(isThirdOnWhite, time, should_stop, bias)
+    lfollow_right_inside_line_pid_until(white_third, time, should_stop, bias)
 
 # -------------------------------Debug------------------------
 
 def debug_right_tophat():
-    if isRightOnBlack():
+    if black_right():
         print "Right tophat senses black: " + str(analog(c.RIGHT_TOPHAT))
-    elif isRightOnWhite():
+    elif white_right():
         print "Right tophat see white: " + str(analog(c.RIGHT_TOPHAT))
     else:
-        print "Error in defining isRightOnBlack and isRightOnWhite"
+        print "Error in defining black_right and white_right"
         u.sd()
 
 
 def debug_left_tophat():
-    if isLeftOnBlack():
+    if black_left():
         print "Left tophat senses black: " + str(analog(c.LEFT_TOPHAT))
     elif isLeftOnWhite():
         print "Left tophat senses white: " + str(analog(c.LEFT_TOPHAT))
     else:
-        print "Error in defining isLeftOnBlack and isLeftOnWhite"
+        print "Error in defining black_left and isLeftOnWhite"
         u.sd()

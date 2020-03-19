@@ -84,27 +84,6 @@ def calibrate_motor_powers():
     print "c.BASE_LM_POWER: " + str(c.BASE_LM_POWER)
     print "c.BASE_RM_POWER: " + str(c.BASE_RM_POWER)
 
-
-#---------------------Gyro Updating Commands--------------------------------------------
-# The gyro sensor is best when it only updates every 10 ms, so we make sure it'll only update after that much time.
-
-def update_gyro_cheeky():
-    time_since_last_update = ((seconds() - c.SECONDS_DELAY) - c.LAST_GYRO_UPDATE) * 1000
-    if time_since_last_update >= 10:
-        c.ROBOT_ANGLE += (get_change_in_angle() - bias) * 10 * (time_since_last_update / (time_since_last_update - (time_since_last_update / 36.5)))
-        c.LAST_GYRO_UPDATE = seconds() - c.SECONDS_DELAY
-
-
-def update_gyro(ms=1):
-    c.MS_SINCE_LAST_GYRO_UPDATE += ms
-    if c.MS_SINCE_LAST_GYRO_UPDATE >= 10:
-        c.ROBOT_ANGLE += (get_change_in_angle() - bias) * 10
-        c.MS_SINCE_LAST_GYRO_UPDATE -= 10
-
-
-def print_robot_angle():
-    print "Robot Angle: " + str(c.ROBOT_ANGLE / c.DEGREE_CONVERSION_RATE)
-
 #-----------------------Gyro-Based Movement Commands-------------------------------------
 # The gyro sensor can determine what angle the robot is at any given point in time. So, if the gyro sensor senses
 # an angle other than 0, then it is clear that the bot is veering. So, the robot veers in the opposite direction to
@@ -205,66 +184,6 @@ def drive_gyro_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
         angle += (get_change_in_angle() - bias) * 10
         error = 0.034470956 * angle  # Positive error means veering left. Negative means veering right.
         memory += 0.00001 * error
-    if should_stop:
-        m.deactivate_motors()
-
-
-@print_function_name_with_arrows
-def drive_gyro_until_black_left(time=c.SAFETY_TIME, should_stop=True):
-    drive_gyro_until(s.isLeftOnBlack, time, should_stop)
-
-
-@print_function_name_with_arrows
-def drive_gyro_until_white_left(time=c.SAFETY_TIME, should_stop=True):
-    drive_gyro_until(s.isLeftOnWhite, time, should_stop)
-
-
-@print_function_name_with_arrows
-def drive_gyro_until_black_right(time=c.SAFETY_TIME, should_stop=True):
-    drive_gyro_until(s.isRightOnBlack, time, should_stop)
-
-
-@print_function_name_with_arrows
-def drive_gyro_until_white_right(time=c.SAFETY_TIME, should_stop=True):
-    drive_gyro_until(s.isRightOnWhite, time, should_stop)
-
-
-@print_function_name_with_arrows
-def drive_gyro_until_black_third(time=c.SAFETY_TIME, should_stop=True):
-    drive_gyro_until(s.isThirdOnBlack, time, should_stop)
-
-
-@print_function_name_with_arrows
-def drive_gyro_until_white_third(time=c.SAFETY_TIME, should_stop=True):
-    drive_gyro_until(s.isThirdOnWhite, time, should_stop)
-
-
-@print_function_name_with_arrows
-def drive_gyro_until_black_fourth(time=c.SAFETY_TIME, should_stop=True):
-    drive_gyro_until(s.isFourthOnBlack, time, should_stop)
-
-
-@print_function_name_with_arrows
-def drive_gyro_until_white_fourth(time=c.SAFETY_TIME, should_stop=True):
-    drive_gyro_until(s.isFourthOnWhite, time, should_stop)
-
-@print_function_name_with_arrows
-def drive_gyro_until_black_right_or_fourth(time=c.SAFETY_TIME, should_stop=True):
-    angle = 0
-    error = 0
-    memory = 0
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    sec = seconds() + time / 1000.0
-    while seconds() < sec and s.isFourthOnWhite() and s.isRightOnWhite():
-        left_speed = c.BASE_LM_POWER + error
-        right_speed = c.BASE_RM_POWER + error
-        m.activate_motors(left_speed, right_speed)
-        msleep(10)
-        angle += (get_change_in_angle() - bias) * 10
-        error = 0.034470956 * angle  # Positive error means veering left.
-        memory += 0.001 * error
     if should_stop:
         m.deactivate_motors()
 

@@ -19,28 +19,6 @@ def initialize_camera():
     print "Finished Step 100\n"
 
 
-def check_zones_hospital():
-    print "Starting check_zones_hospital()"
-    msleep(25)
-    ao()
-    # This fully turns of the motors instead of just stopping them. Do not remove.
-    camera_open()
-    print "Checking zones"
-    initialize_camera()
-    #open_graphics_window() 
-    if get_object_area(c.YELLOW, 0) > 50:
-        c.BURNING_HOSPITAL = c.NEAR_ZONE
-        c.SAFE_HOSPITAL = c.FAR_ZONE
-        #draw_burning_zone_left()
-    else:
-        c.BURNING_HOSPITAL = c.FAR_ZONE
-        c.SAFE_HOSPITAL = c.NEAR_ZONE
-        #draw_burning_zone_right()
-    m.lift_ambulance_arm()
-    print "Burning Hospital Zone: " + str(c.BURNING_HOSPITAL)
-    print "Safe Hospital Zone: " + str(c.SAFE_HOSPITAL)
-
-
 def graphics():
     console_clear()
     max_length = 480
@@ -48,8 +26,9 @@ def graphics():
     middle_length = max_length / 2
     graphics_open(max_length, max_height)  # Creates the graphics array with the given size
     graphics_fill(255, 255, 255)  # Fills screen with white
-    graphics_rectangle_fill(0, 0, middle_length, max_height, 255, 255, 0)  # Fills left with yellow.
-    graphics_rectangle_fill(middle_length / 2, max_height / 3, 3 * middle_length / 4, 2 * max_height / 3, 255, 0, 0)  # Fills right with red.
+
+    # Place graphics here.
+
     graphics_update()
 
 

@@ -48,9 +48,6 @@ if IS_MAIN_BOT:
     LEFT_TURN_TIME = 900
     DEFAULT_DRIVE_TIME = 500
     DEFAULT_BACKWARDS_TIME = 500
-    PIVOT_RIGHT_TURN_TIME = 3580  # Turns 180 degrees. Not currently used.
-    PIVOT_LEFT_TURN_TIME = 3400  # Ditto above.
-    MOVEMENT_REFRESH_RATE = 30
 
     #-------------------------------Servos------------------------
 
@@ -63,58 +60,42 @@ if IS_MAIN_BOT:
     ARM_SERVO = 2
     MAX_ARM_SERVO_POS = MAX_SERVO_POS
     MIN_ARM_SERVO_POS = MIN_SERVO_POS
-    ARM_HIGH_POS = 51
-    ARM_UP_POS = 154
-    ARM_DOWN_POS = 1322
-    
-    # Ambulance Arm Motor
-    AMBULANCE_ARM_HIGH_POS = 105
-    AMBULANCE_ARM_LOW_POS = 0
-
-    # Wiper Servo
-    WINDSHIELD_WIPER_SERVO = 0
-    WINDSHIELD_WIPER_LEFT_POS = 101
-    WINDSHIELD_WIPER_RIGHT_POS = 1899
-    WINDSHIELD_WIPER_MIDDLE_POS = 822
+    ARM_HIGH_POS = 1024
+    ARM_UP_POS = 1024
+    ARM_DOWN_POS = 1024
 
     # Claw Servo
     CLAW_SERVO = 3
     MAX_CLAW_SERVO_POS = MAX_SERVO_POS
     MIN_CLAW_SERVO_POS = MIN_SERVO_POS
-    CLAW_WAY_OPEN_POS = 918
-    CLAW_OPEN_POS = 470
-    CLAW_CLOSE_POS = 336
-    CLAW_VERY_CLOSED_POS = 122
-    CLAW_CHECKING_POS = CLAW_CLOSE_POS
+    CLAW_WAY_OPEN_POS = 1024
+    CLAW_OPEN_POS = 1024
+    CLAW_CLOSE_POS = 1024
+    CLAW_VERY_CLOSED_POS = 1024
+    CLAW_CHECKING_POS = 1024
 
     # Micro Servo
     MICRO_SERVO = 0
-    MICRO_LEFT_POS = 1563
-    MICRO_RIGHT_POS = 900
-    MICRO_CHECKING_POS = MICRO_LEFT_POS - 200
-    MICRO_SHOULD_GO_LEFT = True
-    MICRO_SHOULD_GO_RIGHT = False
     
-
     # Starting Positions
-    STARTING_ARM_POS = ARM_HIGH_POS
-    STARTING_CLAW_POS = CLAW_VERY_CLOSED_POS
-    STARTING_MICRO_POS = MICRO_LEFT_POS
+    STARTING_ARM_POS = 1024
+    STARTING_CLAW_POS = 1024
+    STARTING_MICRO_POS = 1024
 
     #-------------------------------Sensors------------------------
 
     # Analog Ports
-    LIGHT_SENSOR = 5
-    LEFT_TOPHAT = 0
-    RIGHT_TOPHAT = 1
-    THIRD_TOPHAT = 4
-    FOURTH_TOPHAT = 3
+    LIGHT_SENSOR = 0
+    LEFT_TOPHAT = 1
+    RIGHT_TOPHAT = 2
+    THIRD_TOPHAT = 3
+    FOURTH_TOPHAT = 4
 
     # Analog Values
-    LEFT_TOPHAT_BW = 721  # If more, black. If less, white.
-    RIGHT_TOPHAT_BW = 785  # If more, black. If less, white.
-    THIRD_TOPHAT_BW = 2083  # If more, black. If less, white.
-    FOURTH_TOPHAT_BW = 2083
+    LEFT_TOPHAT_VALUE_MIDPOINT = 721  # If more, black. If less, white.
+    RIGHT_TOPHAT_VALUE_MIDPOINT = 785  # If more, black. If less, white.
+    THIRD_TOPHAT_VALUE_MIDPOINT = 2083  # If more, black. If less, white.
+    FOURTH_TOPHAT_VALUE_MIDPOINT = 2083
     LFOLLOW_REFRESH_RATE = 30  # Default amount of time before tophats check their black/white status again.
 
     # Digital Sensors
@@ -122,9 +103,6 @@ if IS_MAIN_BOT:
     RIGHT_LIMIT_SWITCH = 1
 
     # Gryo Values
-    ROBOT_ANGLE = 0
-    MS_SINCE_LAST_GYRO_UPDATE = 0
-    LAST_GYRO_UPDATE = 0
     DEGREE_CONVERSION_RATE = 6281.8888889
 
     # Camera Colors
@@ -135,8 +113,6 @@ if IS_MAIN_BOT:
     # Camera Zones
     NEAR_ZONE = -1
     FAR_ZONE = 1
-    BURNING_HOSPITAL = NEAR_ZONE
-    SAFE_HOSPITAL = FAR_ZONE
 
     # PID Lfollow Values
     MAX_TOPHAT_VALUE_RIGHT = 3200
@@ -189,9 +165,6 @@ else:  # Clone Bot -------------------------------------------------------------
     LEFT_TURN_TIME = 900
     DEFAULT_DRIVE_TIME = 500
     DEFAULT_BACKWARDS_TIME = 500
-    PIVOT_RIGHT_TURN_TIME = 3580  # Turns 180 degrees. Not currently used.
-    PIVOT_LEFT_TURN_TIME = 3400  # Ditto above.
-    MOVEMENT_REFRESH_RATE = 30
 
     # -------------------------------Servos------------------------
 
@@ -207,48 +180,38 @@ else:  # Clone Bot -------------------------------------------------------------
     ARM_UP_POS = 669
     ARM_DOWN_POS = 1770
 
-    # Clone Wiper Servo
-    WINDSHIELD_WIPER_SERVO = 0
-    WINDSHIELD_WIPER_LEFT_POS = 101
-    WINDSHIELD_WIPER_RIGHT_POS = 1899
-    WINDSHIELD_WIPER_MIDDLE_POS = 822
-
     # Clone Claw Servo
     CLAW_SERVO = 1
-    MAX_CLAW_SERVO_POS = MAX_SERVO_POS
-    MIN_CLAW_SERVO_POS = MIN_SERVO_POS
+    MAX_CLAW_SERVO_POS = 1024
+    MIN_CLAW_SERVO_POS = 1024
     CLAW_OPEN_POS = 458  # Claw fingers form a 180 degree line
     CLAW_CLOSE_POS = 1024
     CLAW_TRUCK_CLOSE_POS = 1418
     CLAW_LESS_OPEN_POS = 928
-    CLAW_CHECKING_POS = CLAW_CLOSE_POS
+    CLAW_CHECKING_POS = 1024
 
     # Clone Micro Servo
-    MICRO_SERVO = 3
-    MICRO_LEFT_POS = 1024
-    MICRO_RIGHT_POS = 1024
-    MICRO_SHOULD_GO_LEFT = True
-    MICRO_SHOULD_GO_RIGHT = False
+    MICRO_SERVO = 0
 
     # Clone Starting Positions
-    STARTING_ARM_POS = ARM_UP_POS
-    STARTING_CLAW_POS = CLAW_CLOSE_POS
-    STARTING_WINDSHIELD_WIPER_POS = WINDSHIELD_WIPER_RIGHT_POS
+    STARTING_ARM_POS = 1024
+    STARTING_CLAW_POS = 1024
+    STARTING_MICRO_POS = 1024
 
     # -------------------------------Sensors------------------------
 
     # Clone Analog Ports
-    LIGHT_SENSOR = 5
-    LEFT_TOPHAT = 0
-    RIGHT_TOPHAT = 1
-    THIRD_TOPHAT = 4
-    FOURTH_TOPHAT = 3
+    LIGHT_SENSOR = 0
+    LEFT_TOPHAT = 1
+    RIGHT_TOPHAT = 2
+    THIRD_TOPHAT = 3
+    FOURTH_TOPHAT = 4
 
     # Clone Analog Values
-    LEFT_TOPHAT_BW = 721  # If more, black. If less, white.
-    RIGHT_TOPHAT_BW = 785  # If more, black. If less, white.
-    THIRD_TOPHAT_BW = 2083  # If more, black. If less, white.
-    FOURTH_TOPHAT_BW = 2083
+    LEFT_TOPHAT_VALUE_MIDPOINT = 721  # If more, black. If less, white.
+    RIGHT_TOPHAT_VALUE_MIDPOINT = 785  # If more, black. If less, white.
+    THIRD_TOPHAT_VALUE_MIDPOINT = 2083  # If more, black. If less, white.
+    FOURTH_TOPHAT_VALUE_MIDPOINT = 2083
     LFOLLOW_REFRESH_RATE = 30  # Default amount of time before tophats check their black/white status again.
 
     # Clone Digital Sensors
@@ -256,9 +219,6 @@ else:  # Clone Bot -------------------------------------------------------------
     BUMP_SENSOR = 1
 
     # Clone Gyro Values
-    ROBOT_ANGLE = 0
-    MS_SINCE_LAST_GYRO_UPDATE = 0
-    LAST_GYRO_UPDATE = 0
     DEGREE_CONVERSION_RATE = 6281.8888889
 
     # Clone Camera Colors
@@ -269,8 +229,6 @@ else:  # Clone Bot -------------------------------------------------------------
     # Clone Camera Zones
     NEAR_ZONE = -1
     FAR_ZONE = 1
-    BURNING_HOSPITAL = NEAR_ZONE
-    SAFE_HOSPITAL = FAR_ZONE
 
     # Clone PID Lfollow Values
     MAX_TOPHAT_VALUE_RIGHT = 3200
