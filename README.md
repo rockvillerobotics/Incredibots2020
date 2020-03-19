@@ -2,7 +2,7 @@
 <h4 align="center">Greater DC/VA Regionals 2020</h4>
 <p align="center">
   <img src="https://img.shields.io/badge/Team_Number-0333-orange.svg" /></a>
-  <a href="https://travis-ci.com/rockvillerobotics/Incredibots2019"><img src="https://travis-ci.com/rockvillerobotics/Incredibots2019.svg?branch=master" /></a>
+  <a href="https://travis-ci.com/rockvillerobotics/Incredibots2020"><img src="https://travis-ci.com/rockvillerobotics/Incredibots2020.svg?branch=master" /></a>
   <a href="LICENSE.txt"><img src="https://img.shields.io/badge/License-GPL_3.0-lightgray.svg" /></a>
 </p>
 
