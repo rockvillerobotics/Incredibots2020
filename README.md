@@ -3,7 +3,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/Team_Number-0333-orange.svg" /></a>
   <a href="https://travis-ci.com/rockvillerobotics/Incredibots2019"><img src="https://travis-ci.com/rockvillerobotics/Incredibots2019.svg?branch=master" /></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-lightgray.svg" /></a>
+  <a href="LICENSE.txt"><img src="https://img.shields.io/badge/License-GPL_3.0-lightgray.svg" /></a>
 </p>
 
 ### Check out [our wiki] for more information about us.
