@@ -1,5 +1,5 @@
 <h1 align="center">Rockville Robotics - The Incredibots</h1>
-<p align="center">Greater DC/VA Regionals 2020</p>
+<h4 align="center">Greater DC/VA Regionals 2020</h4>
 <p align="center">
   <img src="https://img.shields.io/badge/Team_Number-0333-orange.svg" /></a>
   <a href="https://travis-ci.com/rockvillerobotics/Incredibots2019"><img src="https://travis-ci.com/rockvillerobotics/Incredibots2019.svg?branch=master" /></a>
