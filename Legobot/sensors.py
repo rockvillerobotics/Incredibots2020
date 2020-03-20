@@ -163,28 +163,28 @@ def drive_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
 
 @print_function_name
 def drive_through_line_left(time=c.SAFETY_TIME, should_stop=True):
-    drive_until(left.black, should_stop=False)
-    drive_until(white.left, time, should_stop)
+    drive_until(left.senses_black, should_stop=False)
+    drive_until(left.senses_white, time, should_stop)
 
 
 @print_function_name
 def drive_through_line_right(time=c.SAFETY_TIME, should_stop=True):
-    drive_until(right.black, should_stop=False)
-    drive_until(right.white, time, should_stop)
+    drive_until(right.senses_black, should_stop=False)
+    drive_until(right.senses_white, time, should_stop)
 
 
 @print_function_name
 def drive_through_line_third(time=c.SAFETY_TIME, should_stop=True):
-    drive_until(third.black, should_stop=False)
-    drive_until(third.white, time, should_stop)
+    drive_until(third.senses_black, should_stop=False)
+    drive_until(third.senses_white, time, should_stop)
 
 
 @print_function_name
 def drive_through_two_lines_third(time=c.SAFETY_TIME, should_stop=True):  # Drives without stopping the motors in between
-    drive_until(third.black, should_stop=False)
-    drive_until(third.white, should_stop=False)
-    drive_until(third.black, should_stop=False)
-    drive_until(third.white, time, should_stop)
+    drive_until(third.senses_black, should_stop=False)
+    drive_until(third.senses_white, should_stop=False)
+    drive_until(third.senses_black, should_stop=False)
+    drive_until(third.senses_white, time, should_stop)
 
 
 @print_function_name_with_arrows
@@ -200,17 +200,315 @@ def backwards_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
 
 @print_function_name
 def backwards_through_line_left(time=c.SAFETY_TIME, should_stop=True):
-    backwards_until(left.black, should_stop=False)
+    backwards_until(left.senses_black, should_stop=False)
     backwards_until(left.white, time, should_stop)
 
 
 @print_function_name
 def backwards_through_line_third(time=c.SAFETY_TIME, should_stop=True):
-    backwards_until(third.black, should_stop=False)
-    backwards_until(third.white, time, should_stop)
+    backwards_until(third.senses_black, should_stop=False)
+    backwards_until(third.senses_white, time, should_stop)
 
 
 @print_function_name
 def backwards_through_line_right(time=c.SAFETY_TIME, should_stop=True):
-    backwards_until(right.black, should_stop=False)
-    backwards_until(right.white, time, should_stop)
+    backwards_until(right.senses_black, should_stop=False)
+    backwards_until(right.senses_white, time, should_stop)
+
+
+#-----------------------Gyro Calibration Commands-------------------------------------
+# Calibrate gyro "zeroes" the gyro sensor. It determines what the gyro reads when the bot is resting.
+# Determine gyro conversion rate figures out how many degrees the gyro sensor counts during a 360 degree
+#   turn and uses that as a basis for all other turns
+# Calibrate motor powers has the robot drive straight using the gyro sensor and sets the powers being used to drive
+#   straight to be the base powers.
+
+
+def get_change_in_angle():
+    return(gyro_z())
+
+def calibrate_gyro():
+    ao()
+    msleep(100)
+    i = 0
+    avg = 0
+    while i < 100:
+        avg = avg + get_change_in_angle()
+        msleep(1)
+        i = i + 1
+    global bias
+    bias = avg/i
+    msleep(60)
+
+
+def determine_gyro_conversion_rate():
+    angle = 0
+    print "Starting determine_gyro_conversion_rate()"
+    print "Starting left.senses_white()"
+    while left.senses_white():
+        msleep(10)
+        angle += (get_change_in_angle() - bias) * 10
+    print "Starting left.senses_black()"
+    while left.senses_black():
+        msleep(10)
+        angle += (get_change_in_angle() - bias) * 10
+    print "Starting left.senses_white()"
+    while left.senses_white():
+        msleep(10)
+        angle += (get_change_in_angle() - bias) * 10
+    print "Starting left.senses_black()"
+    while left.senses_black():
+        msleep(10)
+        angle += (get_change_in_angle() - bias) * 10
+    print "Starting left.senses_white()"
+    while left.senses_white():
+        msleep(10)
+        angle += (get_change_in_angle() - bias) * 10
+    "Stopping motors."
+    m.deactivate_motors()
+    c.DEGREE_CONVERSION_RATE = abs(angle / 360.0) #- 92
+    print "DEGREE_CONVERSION_RATE: " + str(c.DEGREE_CONVERSION_RATE)
+
+#-----------------------Gyro-Based Movement Commands-------------------------------------
+# The gyro sensor can determine what angle the robot is at any given point in time. So, if the gyro sensor senses
+# an angle other than 0, then it is clear that the bot is veering. So, the robot veers in the opposite direction to
+# reduce the error proportionally to how big the error is.
+
+@print_function_name_with_arrows
+def drive_gyro(time, should_stop=True):
+    angle = 0
+    error = 0
+    memory = 0
+    if time == 0:
+        should_stop = False
+        time = c.SAFETY_TIME
+    sec = seconds() + time / 1000.0
+    while seconds() < sec:
+        left_speed = left_motor.base_power + (error + memory)
+        right_speed = right_motor.base_power - (error + memory)
+        m.activate_motors(left_speed, right_speed)
+        msleep(10)
+        angle += (get_change_in_angle() - bias) * 10
+        error = 0.034470956 * angle  # Positive error means veering left. Negative means veering right.
+        memory += 0.001 * error
+    if should_stop:
+        m.deactivate_motors()
+
+
+@print_function_name_with_arrows
+def backwards_gyro(time, should_stop=True):
+    angle = 0
+    error = 0
+    memory = 0
+    if time == 0:
+        should_stop = False
+        time = c.SAFETY_TIME
+    sec = seconds() + time / 1000.0
+    while seconds() < sec:
+        left_speed = -left_motor.base_power + (error + memory)
+        right_speed = -right_motor.base_power - (error + memory)
+        m.activate_motors(left_speed, right_speed)
+        msleep(10)
+        angle += (get_change_in_angle() - bias) * 10
+        error = 0.034470956 * angle  # Positive error means veering right. Negative means veering left.
+        memory += 0.001 * error
+    if should_stop:
+        m.deactivate_motors()
+
+
+#-----------------------Gyro-Based Turning Commands-------------------------------------
+# The robot turns until the gyro sensor senses the desired angle.
+
+def turn_gyro(degrees, should_stop=True):
+    angle = 0
+    target_angle = degrees * c.DEGREE_CONVERSION_RATE
+    if target_angle > 0:
+        m.base_turn_left()
+        sec = seconds() + c.SAFETY_TIME
+        while angle < target_angle and seconds() < sec:
+            msleep(10)
+            angle += (get_change_in_angle() - bias) * 10
+    else:
+        m.base_turn_right()
+        sec = seconds() + c.SAFETY_TIME
+        while angle > target_angle and seconds() < sec:
+            msleep(10)
+            angle += (get_change_in_angle() - bias) * 10
+    if should_stop:
+        m.deactivate_motors()
+
+
+def turn_left_gyro(degrees=90, should_stop=True):
+    print "Starting turn_left_gyro() for " + str(degrees) + " degrees"
+    turn_gyro(degrees, should_stop)
+
+
+def turn_right_gyro(degrees=90, should_stop=True):
+    print "Starting turn_right_gyro() for " + str(degrees) + " degrees"
+    turn_gyro(-degrees, should_stop)
+
+
+#----------------Gyro-Based Movement Until Tophat-----------------
+# Basic gyro-based movement until the tophat senses black or white. This ensures that the
+# bot doesn't veer on its way to a line.
+
+@print_function_name_with_arrows
+def drive_gyro_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
+    angle = 0
+    error = 0
+    memory = 0
+    if time == 0:
+        should_stop = False
+        time = c.SAFETY_TIME
+    sec = seconds() + time / 1000.0
+    while seconds() < sec and not(boolean_function()):
+        left_speed = left_motor.base_power + (error + memory)
+        right_speed = right_motor.base_power - (error + memory)
+        m.activate_motors(left_speed, right_speed)
+        msleep(10)
+        angle += (get_change_in_angle() - bias) * 10
+        error = 0.034470956 * angle  # Positive error means veering left. Negative means veering right.
+        memory += 0.00001 * error
+    if should_stop:
+        m.deactivate_motors()
+
+
+@print_function_name_with_arrows
+def backwards_gyro_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
+    angle = 0
+    error = 0
+    memory = 0
+    if time == 0:
+        should_stop = False
+        time = c.SAFETY_TIME
+    sec = seconds() + time / 1000.0
+    while seconds() < sec and not(boolean_function()):
+        left_speed = -left_motor.base_power + (error + memory)
+        right_speed = -right_motor.base_power - (error + memory)
+        m.activate_motors(left_speed, right_speed)
+        msleep(10)
+        angle += (get_change_in_angle() - bias) * 10
+        error = 0.034470956 * angle  # Positive error means veering left. Negative means veering right.
+        memory += 0.001 * error
+    if should_stop:
+        m.deactivate_motors()
+
+
+@print_function_name
+def drive_gyro_through_line_left(time=c.SAFETY_TIME, should_stop=True):
+    drive_gyro_until(left.senses_black, should_stop=False)
+    drive_gyro_until(left.senses_white, time, should_stop)
+
+
+@print_function_name
+def drive_gyro_through_line_right(time=c.SAFETY_TIME, should_stop=True):
+    drive_gyro_until(right.senses_black, should_stop=False)
+    drive_gyro_until(right.senses_white, time, should_stop)
+
+
+@print_function_name
+def drive_gyro_through_line_third(time=c.SAFETY_TIME, should_stop=True):
+    drive_gyro_until(third.senses_black, should_stop=False)
+    drive_gyro_until(third.senses_white, time, should_stop)
+
+
+@print_function_name
+def drive_gyro_through_line_fourth(time=c.SAFETY_TIME, should_stop=True):
+    drive_gyro_until(fourth.senses_black, should_stop=False)
+    drive_gyro_until(fourth.senses_white, time, should_stop)
+
+
+@print_function_name
+def backwards_gyro_through_line_left(time=c.SAFETY_TIME, should_stop=True):
+    backwards_gyro_until(left.senses_black, should_stop=False)
+    backwards_gyro_until(left.senses_white, time, should_stop)
+
+
+@print_function_name
+def backwards_gyro_through_line_right(time=c.SAFETY_TIME, should_stop=True):
+    backwards_gyro_until(right.senses_black, should_stop=False)
+    backwards_gyro_until(right.senses_white, time, should_stop)
+
+
+@print_function_name
+def backwards_gyro_through_line_third(time=c.SAFETY_TIME, should_stop=True):
+    backwards_gyro_until(third.senses_black, should_stop=False)
+    backwards_gyro_until(third.senses_white, time, should_stop)
+
+
+@print_function_name
+def drive_gyro_to_line_left(time=c.SAFETY_TIME, should_stop=True):
+    drive_gyro_until(left.senses_white, should_stop=False)
+    drive_gyro_until(left.senses_black, (time, should_stop)
+
+
+@print_function_name
+def drive_gyro_to_line_right(time=c.SAFETY_TIME, should_stop=True):
+    drive_gyro_until(right.senses_white, should_stop=False)
+    drive_gyro_until(right.senses_black, time, should_stop)
+
+
+@print_function_name
+def drive_gyro_to_line_third(time=c.SAFETY_TIME, should_stop=True):
+    drive_gyro_until(third.senses_white, should_stop=False)
+    drive_gyro_until(third.senses_black, time, should_stop)
+
+
+@print_function_name
+def backwards_gyro_to_line_left(time=c.SAFETY_TIME, should_stop=True):
+    backwards_gyro_until(left.senses_white, should_stop=False)
+    backwards_gyro_until(left.senses_black, time, should_stop)
+
+
+@print_function_name
+def backwards_gyro_to_line_right(time=c.SAFETY_TIME, should_stop=True):
+    backwards_gyro_until(right.senses_white, should_stop=False)
+    backwards_gyro_until(right.senses_black, time, should_stop)
+
+
+@print_function_name
+def backwards_gyro_to_line_third(time=c.SAFETY_TIME, should_stop=True):
+    backwards_gyro_until(third.senses_white, should_stop=False)
+    backwards_gyro_until(third.senses_black, time, should_stop)
+
+#----------------Webcam-----------------
+
+max_length =
+def initialize_camera():
+    # Wait two seconds for camera to initialize
+    print "Initializing Camera"
+    i = 0  # Counter
+    print "Starting Step 1..."
+    while i < 55:
+        camera_update()
+        i += 1
+        msleep(1)
+    print "Finished Step 100\n"
+
+#----------------Screen Graphics-----------------
+
+@print_function_name_with_arrows
+def open_graphics_window():
+    if not(c.IS_GRAPHICS_OPEN):
+        console_clear()
+        graphics_open(max_length, max_height) # Creates the graphics array with the given size
+        graphics_fill(255, 255, 255)  # Fills screen with white          
+    c.IS_GRAPHICS_OPEN = True
+
+
+@print_function_name_with_arrows
+def close_graphics_window():
+    graphics_close()
+    c.IS_GRAPHICS_OPEN = False
+
+
+def graphics():
+    console_clear()
+    open_graphics_window()
+    graphics_fill(255, 255, 255)  # Fills screen with white
+
+    # Place graphics here.
+
+    graphics_update()
+
+

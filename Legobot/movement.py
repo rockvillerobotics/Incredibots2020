@@ -213,16 +213,6 @@ def lower_arm(tics=3, ms=1, servo_pos=c.BASE_TIME):
 # All these commands move the motors to a specified location at a specified speed.
 # The more tics per second, the faster the motors moves.
 
-def get_motor_tics(motor_port):
-    return(gmpc(motor_port))
-    #motor_tics = gmpc(motor_port)
-    #while motor_tics > 2047:
-    #    motor_tics -= 2047
-    #while motor_tics < 0:
-    #    motor_tics += 2047
-    #return(motor_tics)
-
-
 @print_function_name_with_arrows
 def lift_ambulance_arm(desired_speed=c.BASE_AMBULANCE_ARM_POWER):
     move_ambulance_arm(c.AMBULANCE_ARM_HIGH_POS, desired_speed)

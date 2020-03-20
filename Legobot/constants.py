@@ -68,18 +68,20 @@ if IS_MAIN_BOT:
     SECOND_ZONE = 1
 
     # PID Lfollow Values
-    MAX_TOPHAT_VALUE_RIGHT = 3200
-    MIN_TOPHAT_VALUE_RIGHT = 128
-    MAX_TOPHAT_VALUE_LEFT = 3200
-    MIN_TOPHAT_VALUE_LEFT = 128  # These values dont do anything unless calib command doesnt work right.
-    MAX_TOPHAT_VALUE_THIRD = 3200
-    MIN_TOPHAT_VALUE_THIRD = 128
     KP = 10
     KI = 0.161
     KD = 1
     KP_SAFE = 7
     KI_SAFE = 0.061
     KD_SAFE = 1
+    
+    # Webcam Values
+    MAX_LENGTH = 480
+    MAX_HEIGHT = 260
+    LEFT_EDGE = 0
+    RIGHT_EDGE = MAX_LENGTH
+    TOP_EDGE = 0
+    BOTTOM_EDGE = MAX_HEIGHT
 
     # Miscellaneous Values
     SAFETY_TIME = 15000  # This is the while loop time limit that ensures we don't have an infinite loop.
