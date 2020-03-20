@@ -53,3 +53,29 @@ class Motor:
                 intermediate_velocity += velocity_change
                 msleep(1)
         set_power(self.port, desired_power)  # Ensures actual desired value is reached
+
+    
+    @print_function_name_with_arrows
+    def move(self, desired_tic_location, desired_speed):
+        if desired_tic_location - self.get_tics() > 0:
+            desired_speed = desired_speed
+        elif desired_tic_location - self.get_tics() < 0:
+            desired_speed = -desired_speed
+        else:
+            print "Boi you're bad. The desired location and the current location are the same."
+        print "Current tic location: " + str(get_motor_tics(c.AMBULANCE_ARM_MOTOR))
+        print "Desired tic location: " + str(desired_tic_location)
+        sec = seconds() + 2000 / 1000.0
+        while seconds() < sec and abs(desired_tic_location - self.get_tics()) > 5:
+            speed = (desired_tic_location - self.get_tics()) * 20
+            if speed > desired_speed:
+                speed = desired_speed
+            elif speed < desired_speed:
+                speed = desired_speed
+            elif speed >= 0 and speed < 11:
+                speed = 11
+            elif speed < 0 and speed > -11:
+                speed = -11
+            self.set_power(speed)
+            msleep(1)
+        mav(motor_port, 0)

@@ -36,12 +36,12 @@ class Servo:
         set_servo_position(self.port, pos)
 
 
-    def move_servo(self, desired_pos, tics=3, ms=1):
+    def move(self, desired_pos, tics=3, ms=1):
         # Moves a servo to a given position from its current position. The servo and desired position must be specified.
         # Servo move speed = tics / ms
         # >18 tics is too high
         intermediate_position = get_servo_position(self.port)
-        print "Starting move_servo()"
+        print "Moving servo"
         print get_servo_position(self.port) + " --> " + desired_pos
         print "Speed = " + str(tics) + "/" + str(ms) + " tics per ms"
         if tics > 18:

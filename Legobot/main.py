@@ -2,6 +2,7 @@
 import os
 import sys
 from wallaby import *
+from objects import *
 import constants as c
 import actions as a
 import sensors as s
@@ -13,9 +14,9 @@ import utils as u
 def main():
     print "Starting main()\n"
     u.setup()
-    # u.calibrate()  # Calibrates tophats and motor values
-    off(c.LEFT_MOTOR)
-    off(c.RIGHT_MOTOR)
+    u.calibrate_regionals()  # Calibrates tophats and motor values
+    off(left_motor.port)
+    off(right_motor.port)
     wait_for_light(c.LIGHT_SENSOR)
     
     

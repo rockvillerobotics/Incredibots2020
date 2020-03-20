@@ -1,5 +1,6 @@
 from wallaby import *
 from decorators import *
+from objects import *
 import constants as c
 import sensors as s
 import movement as m
