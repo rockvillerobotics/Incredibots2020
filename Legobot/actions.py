@@ -13,8 +13,12 @@ import gyro as g
 @print_function_name
 def sample_command():
     m.drive(1000)
-    left.lfollow_until(right.black())
-
+    left.lfollow_until
+    
+    lfollow_left_until_black_right()
+    
+    
+    left.lfollow_until(mode=INSIDE_LINE, boolean=right.senses_black)
 
 
 @print_function_name

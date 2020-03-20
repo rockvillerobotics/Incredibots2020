@@ -13,13 +13,13 @@ class Tophat:
         INSIDE_LINE = auto()
         
     
-    def __init__(self, port, side, direction=1):
+    def __init__(self, port, location):
         self.port = port
         self.value_midpoint = 1000
         self.black_value = 3200
         self.white_value = 128
-        self.side = side
-        self.direction = direction
+        self.side = location[1]
+        self.direction = location[2]
 
 
     def set_value_midpoint(self, value_midpoint):
@@ -76,12 +76,12 @@ class Tophat:
             m.deactivate_motors()
 
     
-    def lfollow_until(self, boolean, mode=Mode.STANDARD, should_stop=True, bias=0, *, time=c.SAFETY_TIME):
+    def lfollow_until(self, boolean_function, mode=Mode.STANDARD, should_stop=True, bias=0, *, time=c.SAFETY_TIME):
         target = 100.0 * (self.value_midpoint - self.white_value) / (self.black_value - self.white_value) + bias
         last_error = 0
         integral = 0
         sec = seconds() + time / 1000.0
-        while seconds() < sec and not(boolean()):
+        while seconds() < sec and not(boolean_function()):
             norm_reading = 100.0 * (analog(self.port) - self.white_value) / (self.black_value - self.white_value)
             error = target - norm_reading       # Positive error means white, negative means black.
             derivative = error - last_error     # If rate of change is going negative, need to veer left
