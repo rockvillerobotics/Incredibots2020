@@ -20,67 +20,20 @@ IS_CLONE_BOT = left_button() == 0 and CLONE_BOT_CHANNEL_COUNT() or right_button(
 #-------------------------------Motors, Servos, and Sensors------------------------
 
 if IS_MAIN_BOT:
-    # -- Motors ------
-
-    # Motor Ports
-    LEFT_MOTOR = 2
-    RIGHT_MOTOR = 3
-    AMBULANCE_ARM_MOTOR = 0
-
-    # Base Motor Powers
-    BASE_LM_POWER = 900
-    BASE_RM_POWER = -900
-    HALF_LM_POWER = BASE_LM_POWER / 2
-    HALF_RM_POWER = BASE_RM_POWER / 2
-    FULL_LM_POWER = BASE_LM_POWER
-    FULL_RM_POWER = BASE_RM_POWER
-    LFOLLOW_SMOOTH_LM_POWER = int (.7 * BASE_LM_POWER)
-    LFOLLOW_SMOOTH_RM_POWER = int (.7 * BASE_RM_POWER)
-    BASE_AMBULANCE_ARM_POWER = 500
-    OFF = 999999
-
-    # Motor Power Trackers
-    CURRENT_LM_POWER = 0
-    CURRENT_RM_POWER = 0
-
+    
+    # Locations/Directions
+    LEFT = 1
+    RIGHT = -1
+    FRONT = 1
+    BACK = -1
+    TOP = 1
+    BOTTOM = -1
+    
     # Motor Timings
     RIGHT_TURN_TIME = 900  # Need to test turn timings periodically. They change as battery charge changes, or on new boards.
     LEFT_TURN_TIME = 900
     DEFAULT_DRIVE_TIME = 500
     DEFAULT_BACKWARDS_TIME = 500
-
-    #-------------------------------Servos------------------------
-
-    # Servo Limits
-    MAX_SERVO_POS = 1900  # Cannot physically exceed 2047 or servo will break. Metal servos are more affected.
-    MIN_SERVO_POS = 50  # Cannot physically exceed 0 or servo will break. Metal servos are more affected.
-    SERVO_DELAY = 500  # Time needed to move a servo (need more testing to find a good value).
-
-    # Arm Servo
-    ARM_SERVO = 2
-    MAX_ARM_SERVO_POS = MAX_SERVO_POS
-    MIN_ARM_SERVO_POS = MIN_SERVO_POS
-    ARM_HIGH_POS = 1024
-    ARM_UP_POS = 1024
-    ARM_DOWN_POS = 1024
-
-    # Claw Servo
-    CLAW_SERVO = 3
-    MAX_CLAW_SERVO_POS = MAX_SERVO_POS
-    MIN_CLAW_SERVO_POS = MIN_SERVO_POS
-    CLAW_WAY_OPEN_POS = 1024
-    CLAW_OPEN_POS = 1024
-    CLAW_CLOSE_POS = 1024
-    CLAW_VERY_CLOSED_POS = 1024
-    CLAW_CHECKING_POS = 1024
-
-    # Micro Servo
-    MICRO_SERVO = 0
-    
-    # Starting Positions
-    STARTING_ARM_POS = 1024
-    STARTING_CLAW_POS = 1024
-    STARTING_MICRO_POS = 1024
 
     #-------------------------------Sensors------------------------
 

@@ -2,6 +2,7 @@
 
 from wallaby import *
 from decorators import *
+from objects import *
 import constants as c
 import movement as m
 import sensors as s
@@ -12,6 +13,8 @@ import gyro as g
 @print_function_name
 def sample_command():
     m.drive(1000)
+    left.lfollow_until(right.black())
+
 
 
 @print_function_name

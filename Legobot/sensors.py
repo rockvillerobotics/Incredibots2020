@@ -5,59 +5,8 @@ import gyro as g
 import movement as m
 import utils as u
 
-# -----------------------------HOW TO USE LFOLLOW COMMANDS------------------------
-# All lfollow commands follow a certain pattern which if you learn, you can come up
-# with commands without the need to look in this file. Keep in mind that these rules apply only to
-# lfollow commands, but once you learn their pattern you can figure out all other patterns.
-# To start off, this is the pattern:
-# lfollow_[left, right, backwards]_[inside_line]_[until_black_left, until (event)]_[smooth]([time you want the lfollow to run in ms], [starting speed for left motor], [starting speed for right motor], [refresesh rate for the lfollow in ms])
-# - To signify that you want to run an lfollow command, write lfollow.
-# - Then, you must choose which sensor you want to lfollow with (left tophat, right tophat, or the third tophat respectively)
-# - After this, everything is optional and is only required if you choose to put it in and the situation calls for it.
-# - If you input time=0, then the command will not stop after it is finished.
-#
-# Sample lfollow commands:
-#     lfollow_left()
-#     lfollow_left_smooth()
-#     lfollow_left_pid()
-#     lfollow_left_pid_until_black_right()
-#     lfollow_left_pid_inside_line()
-#     lfollow_left_pid_inside_line_until_black_right()
-#     turn_left_until_black()
-#     turn_left_until_black_right()
-#     left_forwards_until_black()
-#     left_forwards_until_black_right()
-#     align_close()
-#     align_far()
-#
-# Remember: to call one of these commands in another file, you need to put "s." before the command
-# to tell the computer that the command is defined here.
 
 # -------------------------------States------------------------
-
-def black_left():
-    return(analog(c.LEFT_TOPHAT) > c.LEFT_TOPHAT_BW)
-
-def white_left():
-    return(analog(c.LEFT_TOPHAT) < c.LEFT_TOPHAT_BW)
-
-def black_right():
-    return(analog(c.RIGHT_TOPHAT) > c.RIGHT_TOPHAT_BW)
-
-def white_right():
-    return(analog(c.RIGHT_TOPHAT) < c.RIGHT_TOPHAT_BW)
-
-def black_third():
-    return(analog(c.THIRD_TOPHAT) > c.THIRD_TOPHAT_BW)
-
-def white_third():
-    return(analog(c.THIRD_TOPHAT) < c.THIRD_TOPHAT_BW)
-
-def black_fourth():
-    return(analog(c.FOURTH_TOPHAT) > c.FOURTH_TOPHAT_BW)
-
-def white_fourth():
-    return(analog(c.FOURTH_TOPHAT) < c.FOURTH_TOPHAT_BW)
 
 def pressed_left():
     return(digital(c.LEFT_LIMIT_SWITCH) == 1)

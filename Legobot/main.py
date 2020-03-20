@@ -14,6 +14,11 @@ def main():
     print "Starting main()\n"
     u.setup()
     # u.calibrate()  # Calibrates tophats and motor values
+    off(c.LEFT_MOTOR)
+    off(c.RIGHT_MOTOR)
+    wait_for_light(c.LIGHT_SENSOR)
+    
+    
     # Put the commands you want the robot to run here.
     
     u.shutdown()

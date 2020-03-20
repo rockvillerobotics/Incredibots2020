@@ -8,15 +8,17 @@ import utils as u
 #-----------------------Calibration Commands-------------------------------------
 # Calibrate gyro "zeroes" the gyro sensor. It determines what the gyro reads when the bot is resting.
 # Determine gyro conversion rate figures out how many degrees the gyro sensor counts during a 360 degree
-# turn and uses that as a basis for all other turns
+#   turn and uses that as a basis for all other turns
 # Calibrate motor powers has the robot drive straight using the gyro sensor and sets the powers being used to drive
-# straight to be the base powers.
+#   straight to be the base powers.
 
 
 def get_change_in_angle():
     return(gyro_z())
 
 def calibrate_gyro():
+    ao()
+    msleep(100)
     i = 0
     avg = 0
     while i < 100:

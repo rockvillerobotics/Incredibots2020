@@ -1,15 +1,18 @@
 from wombat import *
 
 class Motor:
+    all_motors = []
     
     # Consider these "private variables"
-    def __init__(self, port, base_power, coefficient=1):
+    def __init__(self, port, base_power, direction=1):
         self.port = port
         self.current_power = 0
         self.base_power = base_power
         self.half_power = base_power / 2
         self.full_power = base_power
-        self.coefficient = coefficient
+        self.direction = direction
+        all_motors.append(port)
+        
 
 
     # This is relative to a forward direction. Current power 
@@ -22,8 +25,8 @@ class Motor:
             power = 1450
         elif power < -1450:
             power = -1450
-        mav(self.port, int(self.coefficient * power))
-        self.current_power = int(self.coefficient * power)
+        mav(self.port, int(self.direction * power))
+        self.current_power = int(self.direction * power)
         
 
     def clear_tics(self):
@@ -32,7 +35,7 @@ class Motor:
 
     # This is relative to a forward direction.
     def get_tics(self):
-        return gmpc(self.port) * self.coefficient
+        return gmpc(self.port) * self.direction
     
     
     def accelerate_to(self, desired_power):

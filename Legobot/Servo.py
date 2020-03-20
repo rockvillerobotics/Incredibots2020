@@ -4,15 +4,18 @@ from decorators import *
 class Servo:
     universal_max_pos = 1950
     universal_min_pos = 50
+    all_servos = []
     
-    def __init__(self, port, max_pos=universal_max_pos, min_pos=universal_min_pos):
+    def __init__(self, port, starting_pos=1024, max_pos=universal_max_pos, min_pos=universal_min_pos):
         self.port = port
         self.max_pos = max_pos
         self.min_pos = min_pos
+        self.starting_pos = starting_pos
         if max_pos > min_pos:
             self.direction = 1
         else:
             self.direction = -1
+        all_servos.append(port)
             
 
     def get_pos(self):
