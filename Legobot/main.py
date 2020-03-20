@@ -7,8 +7,6 @@ import constants as c
 import actions as a
 import sensors as s
 import movement as m
-import gyro as g
-import webcam as w
 import utils as u
 
 def main():

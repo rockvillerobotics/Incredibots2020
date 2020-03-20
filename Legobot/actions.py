@@ -7,8 +7,6 @@ import constants as c
 import movement as m
 import sensors as s
 import utils as u
-import webcam as w
-import gyro as g
 
 @print_function_name
 def sample_command():

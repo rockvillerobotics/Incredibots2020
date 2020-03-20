@@ -2,10 +2,8 @@ from wallaby import *
 from decorators import *
 from objects import *
 import constants as c
-import gyro as g
 import movement as m
 import utils as u
-
 
 # -------------------------------States------------------------
 

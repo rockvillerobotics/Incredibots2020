@@ -3,7 +3,6 @@ from wallaby import *
 from decorators import *
 from objects import *
 import constants as c
-import gyro as g
 import sensors as s
 
 #------------------------------- Base Commands -------------------------------
