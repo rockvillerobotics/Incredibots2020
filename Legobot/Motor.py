@@ -14,7 +14,7 @@ class Motor:
 
     # This is relative to a forward direction. Current power 
     def get_power(self):
-        return self.current_power * self.coefficient
+        return self.current_power
 
 
     def set_power(self, power):
@@ -22,8 +22,8 @@ class Motor:
             power = 1450
         elif power < -1450:
             power = -1450
-        mav(self.port, self.coefficient * power)
-        self.current_power = self.coefficient * power
+        mav(self.port, int(self.coefficient * power))
+        self.current_power = int(self.coefficient * power)
         
 
     def clear_tics(self):
@@ -35,28 +35,18 @@ class Motor:
         return gmpc(self.port) * self.coefficient
     
     
-            
-    def accelerate_to(self, power):
-        if desired_velocity < 1 and desired_velocity >= 0:
-            desired_velocity = 1
-        elif desired_velocity > -1 and desired_velocity < 0:
-            desired_velocity = -1
-        intermediate_velocity = get_power()
-        if abs(desired_velocity - get_power()) > 600 or get_power() == 0:
+    def accelerate_to(self, desired_power):
+        if desired_power < 1 and desired_power >= 0:
+            desired_power = 1
+        elif desired_power > -1 and desired_power < 0:
+            desired_power = -1
+        intermediate_velocity = self.current_power
+        if abs(desired_power - self.current_power) > 600 or self.current_power == 0:
              rev = True
         if rev == True:
-            velocity_change = desired_velocity / 30.0
-            while abs(intermediate_velocity - desired_velocity) > 100:
-                mav(motor_port, int(intermediate_velocity))
-                if motor_port == c.LEFT_MOTOR:
-                    c.CURRENT_LM_POWER = desired_velocity
-                elif motor_port == c.RIGHT_MOTOR:
-                    c.CURRENT_RM_POWER = desired_velocity
+            velocity_change = desired_power / 30.0
+            while abs(intermediate_velocity - desired_power) > 100:
+                set_power(self.port, intermediate_velocity)
                 intermediate_velocity += velocity_change
                 msleep(1)
-                g.update_gyro()
-        mav(motor_port, int(desired_velocity))  # Ensures actual desired value is reached
-        if motor_port == c.LEFT_MOTOR:
-            c.CURRENT_LM_POWER = desired_velocity
-        elif motor_port == c.RIGHT_MOTOR:
-            c.CURRENT_RM_POWER = desired_velocity
+        set_power(self.port, desired_power)  # Ensures actual desired value is reached
