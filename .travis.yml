@@ -2,7 +2,7 @@
 os: linux
 dist: xenial # Use Ubuntu 16.04 as our Travis CI environment
 language: python
-python: "2.7"
+python: "3.4"
 env: LEGOBOT_DIR="$TRAVIS_BUILD_DIR/Legobot" \
      ROOMBA_DIR="$TRAVIS_BUILD_DIR/Roomba" \
      WALLABY_PY="$TRAVIS_BUILD_DIR/.travis/wallaby.py" \
