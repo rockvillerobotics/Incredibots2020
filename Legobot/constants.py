@@ -64,8 +64,8 @@ if IS_MAIN_BOT:
     GREEN = 2
 
     # Camera Zones
-    NEAR_ZONE = -1
-    FAR_ZONE = 1
+    FIRST_ZONE = -1
+    SECOND_ZONE = 1
 
     # PID Lfollow Values
     MAX_TOPHAT_VALUE_RIGHT = 3200

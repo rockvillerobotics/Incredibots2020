@@ -56,26 +56,38 @@ def setup():
     print "Setup complete\n\n"
 
 
-def calibrate_regionals():
+def calibrate_regionals(debug=False):
     g.calibrate_gyro()
     calibrate_tophats_and_motors()
-    print "c.BASE_LM_POWER: " + str(c.BASE_LM_POWER)
-    print "c.BASE_RM_POWER: " + str(c.BASE_RM_POWER)
-    print "max_sensor_value_left: " + str(max_sensor_value_left)
-    print "min_sensor_value_left: " + str(min_sensor_value_left)
-    print "LEFT_TOPHAT_BW: " + str(c.LEFT_TOPHAT_BW)
-    print "max_sensor_value_right: " + str(max_sensor_value_right)
-    print "min_sensor_value_right: " + str(min_sensor_value_right)
-    print "RIGHT_TOPHAT_BW: " + str(c.RIGHT_TOPHAT_BW)
-    print "max_sensor_value_third: " + str(max_sensor_value_third)
-    print "min_sensor_value_third: " + str(min_sensor_value_third)
-    print "THIRD_TOPHAT_BW: " + str(c.THIRD_TOPHAT_BW)
-    print "max_sensor_value_fourth: " + str(max_sensor_value_fourth)
-    print "min_sensor_value_fourth: " + str(min_sensor_value_fourth)
-    print "FOURTH_TOPHAT_BW: " + str(c.FOURTH_TOPHAT_BW)
+    print "left_motor.base_power: " + str(left_motor.base_power)
+    print "right_motor.base_power: " + str(right_motor.base_power)
+    print "left.value_midpoint: " + str(left.value_midpoint)
+    print "right.value_midpoint: " + str(right.value_midpoint)
+    print "third.value_midpoint: " + str(third.value_midpoint)
+    print "fourth.value_midpoint: " + str(fourth.value_midpoint)
+    if debug == True:
+        print "max_sensor_value_left: " + str(max_sensor_value_left)
+        print "min_sensor_value_left: " + str(min_sensor_value_left)
+        print "max_sensor_value_right: " + str(max_sensor_value_right)
+        print "min_sensor_value_right: " + str(min_sensor_value_right)
+        print "max_sensor_value_third: " + str(max_sensor_value_third)
+        print "min_sensor_value_third: " + str(min_sensor_value_third)
+        print "max_sensor_value_fourth: " + str(max_sensor_value_fourth)
+        print "min_sensor_value_fourth: " + str(min_sensor_value_fourth)
+    msleep(1000)
+    
+
+def wait_until_round_starts(time=0):
+    off(left_motor.port)
+    off(right_motor.port)
+    if time == 0:
+        wait_for_light(c.LIGHT_SENSOR)
+    else:
+        msleep(time)
+    
 
 
-def calibrate_tophats():
+def calibrate_tophats(big_tophat_bias=-1000, small_tophat_bias=600):
     # Code to calibrate the bw values. This goes before every run. Ends with light sensor calibration.
     max_sensor_value_right = 0
     min_sensor_value_right = 90000
@@ -85,42 +97,85 @@ def calibrate_tophats():
     min_sensor_value_third = 90000
     max_sensor_value_fourth = 0
     min_sensor_value_fourth = 90000
-    cmpc(c.LEFT_MOTOR)
-    cmpc(c.RIGHT_MOTOR)
-    calibrate_tics = 2100
+    left_motor.clear_tics()
+    right_motor.clear_tics()
+    if c.IS_MAIN_BOT:
+        calibrate_tics = 2100
+    else: # Clone bot
+        calibrate_tics = 3000
     print "Running calibrate()"
-    m.activate_motors(int(-c.BASE_LM_POWER / 2), int(-c.BASE_RM_POWER / 2))
-    while abs(gmpc(c.LEFT_MOTOR) - gmpc(c.RIGHT_MOTOR)) / 2  < calibrate_tics:
-        if analog(c.RIGHT_TOPHAT) > max_sensor_value_right:
-            max_sensor_value_right = analog(c.RIGHT_TOPHAT)
-        if analog(c.RIGHT_TOPHAT) < min_sensor_value_right:
-            min_sensor_value_right = analog(c.RIGHT_TOPHAT)
-        if analog(c.LEFT_TOPHAT) > max_sensor_value_left:
-            max_sensor_value_left = analog(c.LEFT_TOPHAT)
-        if analog(c.LEFT_TOPHAT) < min_sensor_value_left:
-            min_sensor_value_left = analog(c.LEFT_TOPHAT)
-        if analog(c.THIRD_TOPHAT) > max_sensor_value_third:
-            max_sensor_value_third = analog(c.THIRD_TOPHAT)
-        if analog(c.THIRD_TOPHAT) < min_sensor_value_third:
-            min_sensor_value_third = analog(c.THIRD_TOPHAT)
-        if analog(c.FOURTH_TOPHAT) > max_sensor_value_fourth:
-            max_sensor_value_fourth = analog(c.FOURTH_TOPHAT)
-        if analog(c.FOURTH_TOPHAT) < min_sensor_value_fourth:
-            min_sensor_value_fourth = analog(c.FOURTH_TOPHAT)
+    m.activate_motors(int(-left_motor.base_power / 2), int(-right_motor.base_power / 2))
+    while abs(left_motor.get_tics() + right_motor.get_tics()) / 2  < calibrate_tics:
+        if analog(left.port) > max_sensor_value_left:
+            max_sensor_value_left = analog(left.port)
+        elif analog(left.port) < min_sensor_value_left:
+            min_sensor_value_left = analog(left.port)
+        if analog(right.port) > max_sensor_value_right:
+            max_sensor_value_right = analog(right.port)
+        elif analog(right.port) < min_sensor_value_right:
+            min_sensor_value_right = analog(right.port)
+        if analog(third.port) > max_sensor_value_third:
+            max_sensor_value_third = analog(third.port)
+        elif analog(third.port) < min_sensor_value_third:
+            min_sensor_value_third = analog(third.port)
+        if analog(fourth.port) > max_sensor_value_fourth:
+            max_sensor_value_fourth = analog(fourth.port)
+        elif analog(fourth.port) < min_sensor_value_fourth:
+            min_sensor_value_fourth = analog(fourth.port)
         msleep(1)
     m.deactivate_motors()
     # If sensing black when it should be sensing white, increase bias
     # If sensing white when it should be sensing black, decrease bias
-    c.LEFT_TOPHAT_BW = int(((max_sensor_value_left + min_sensor_value_left) / 2)) + big_tophat_bias
-    c.RIGHT_TOPHAT_BW = int(((max_sensor_value_right + min_sensor_value_right) / 2)) + big_tophat_bias
-    c.THIRD_TOPHAT_BW = int(((max_sensor_value_third + min_sensor_value_third) / 2)) + small_tophat_bias
-    c.FOURTH_TOPHAT_BW = int(((max_sensor_value_fourth + min_sensor_value_fourth) / 2)) + small_tophat_bias
-    c.MAX_TOPHAT_VALUE_RIGHT = max_sensor_value_right
-    c.MIN_TOPHAT_VALUE_RIGHT = min_sensor_value_right
-    c.MAX_TOPHAT_VALUE_LEFT = max_sensor_value_left
-    c.MIN_TOPHAT_VALUE_LEFT = min_sensor_value_left
-    c.MAX_TOPHAT_VALUE_THIRD = max_sensor_value_third
-    c.MIN_TOPHAT_VALUE_THIRD = min_sensor_value_third
+    left.set_value_midpoint(int(((max_sensor_value_left + min_sensor_value_left) / 2)) + big_tophat_bias)
+    right.set_value_midpoint(int(((max_sensor_value_right + min_sensor_value_right) / 2)) + big_tophat_bias)
+    third.set_value_midpoint(int(((max_sensor_value_third + min_sensor_value_third) / 2)) + small_tophat_bias)
+    fourth.set_value_midpoint(int(((max_sensor_value_fourth + min_sensor_value_fourth) / 2)) + small_tophat_bias)
+    left.set_black_value(max_sensor_value_left)
+    left.set_white_value(min_sensor_value_left)
+    right.set_black_value(max_sensor_value_right)
+    right.set_white_value(min_sensor_value_right)
+    third.set_black_value(max_sensor_value_third)
+    third.set_white_value(min_sensor_value_third)
+    fourth.set_black_value(max_sensor_value_fourth)
+    fourth.set_white_value(min_sensor_value_fourth)
+    print "Finished Calibrating. Moving back into starting box...\n"
+    # Put commands here to get robot to desired starting position.
+
+
+def calibrate_motors():
+    left_motor.clear_tics()
+    right_motor.clear_tics()
+    if c.IS_MAIN_BOT:
+        calibrate_tics = 2100
+    else: # Clone bot
+        calibrate_tics = 3000
+    print "Running calibrate()"
+    angle = 0
+    error = 0
+    i = 0
+    total_left_speed = 0
+    total_right_speed = 0
+    m.activate_motors(int(-left_motor.base_power / 2), int(-right_motor.base_power / 2))
+    while abs(left_motor.get_tics() + right_motors.get_tics()) / 2  < calibrate_tics:
+        msleep(10)
+        angle += (g.get_change_in_angle() - g.bias) * 10
+        error = 0.034470956 * angle  # Positive error means veering left. Negative means veering right.
+        left_speed = (-left_motor.base_power + error) / 2
+        right_speed = (-right_motor.base_power + error) / 2
+        total_left_speed += left_speed
+        total_right_speed += right_speed
+        i += 1
+        m.activate_motors(left_speed, right_speed)
+    m.deactivate_motors()
+    # Set all motor powers based on gyro drive during the calibrate.
+    avg_left_speed = total_left_speed / i
+    avg_right_speed = total_right_speed / i
+    left_motor.set_base_power(-avg_left_speed * 2)
+    right_motor.set_base_power(-avg_right_speed * 2)
+    left_motor.set_half_power(left_motor.base_power / 2)
+    right_motor.set_half_power(right_motor.base_power / 2)
+    left_motor.set_full_power(left_motor.base_power)
+    right_motor.set_full_power(right_motor.base_power)
     print "Finished Calibrating. Moving back into starting box...\n"
     # Put commands here to get robot to desired starting position.
 
@@ -135,8 +190,8 @@ def calibrate_tophats_and_motors(big_tophat_bias=-1000, small_tophat_bias=600):
     min_sensor_value_third = 90000
     max_sensor_value_fourth = 0
     min_sensor_value_fourth = 90000
-    cmpc(c.LEFT_MOTOR)
-    cmpc(c.RIGHT_MOTOR)
+    left_motor.clear_tics()
+    right_motor.clear_tics()
     if c.IS_MAIN_BOT:
         calibrate_tics = 2100
     else: # Clone bot
@@ -147,10 +202,10 @@ def calibrate_tophats_and_motors(big_tophat_bias=-1000, small_tophat_bias=600):
     i = 0
     total_left_speed = 0
     total_right_speed = 0
-    m.activate_motors(int(-c.BASE_LM_POWER / 2), int(-c.BASE_RM_POWER / 2))
-    while abs(gmpc(c.LEFT_MOTOR) - gmpc(c.RIGHT_MOTOR)) / 2  < calibrate_tics:
-        left_speed = (-c.BASE_LM_POWER + error) / 2
-        right_speed = (-c.BASE_RM_POWER + error) / 2
+    m.activate_motors(int(-left_motor.base_power / 2), int(-right_motor.base_power / 2))
+    while abs(left_motor.get_tics() + right_motors.get_tics()) / 2  < calibrate_tics:
+        left_speed = (-left_motor.base_power + error) / 2
+        right_speed = (-right_motor.base_power + error) / 2
         total_left_speed += left_speed
         total_right_speed += right_speed
         i += 1
@@ -158,44 +213,47 @@ def calibrate_tophats_and_motors(big_tophat_bias=-1000, small_tophat_bias=600):
         msleep(10)
         angle += (g.get_change_in_angle() - g.bias) * 10
         error = 0.034470956 * angle  # Positive error means veering left. Negative means veering right.
-        if analog(c.RIGHT_TOPHAT) > max_sensor_value_right:
-            max_sensor_value_right = analog(c.RIGHT_TOPHAT)
-        if analog(c.RIGHT_TOPHAT) < min_sensor_value_right:
-            min_sensor_value_right = analog(c.RIGHT_TOPHAT)
-        if analog(c.LEFT_TOPHAT) > max_sensor_value_left:
-            max_sensor_value_left = analog(c.LEFT_TOPHAT)
-        if analog(c.LEFT_TOPHAT) < min_sensor_value_left:
-            min_sensor_value_left = analog(c.LEFT_TOPHAT)
-        if analog(c.THIRD_TOPHAT) > max_sensor_value_third:
-            max_sensor_value_third = analog(c.THIRD_TOPHAT)
-        if analog(c.THIRD_TOPHAT) < min_sensor_value_third:
-            min_sensor_value_third = analog(c.THIRD_TOPHAT)
-        if analog(c.FOURTH_TOPHAT) > max_sensor_value_fourth:
-            max_sensor_value_fourth = analog(c.FOURTH_TOPHAT)
-        if analog(c.FOURTH_TOPHAT) < min_sensor_value_fourth:
-            min_sensor_value_fourth = analog(c.FOURTH_TOPHAT)
+        if analog(right.port) > max_sensor_value_right:
+            max_sensor_value_right = analog(right.port)
+        if analog(right.port) < min_sensor_value_right:
+            min_sensor_value_right = analog(right.port)
+        if analog(left.port) > max_sensor_value_left:
+            max_sensor_value_left = analog(left.port)
+        if analog(left.port) < min_sensor_value_left:
+            min_sensor_value_left = analog(left.port)
+        if analog(third.port) > max_sensor_value_third:
+            max_sensor_value_third = analog(third.port)
+        if analog(third.port) < min_sensor_value_third:
+            min_sensor_value_third = analog(third.port)
+        if analog(fourth.port) > max_sensor_value_fourth:
+            max_sensor_value_fourth = analog(fourth.port)
+        if analog(fourth.port) < min_sensor_value_fourth:
+            min_sensor_value_fourth = analog(fourth.port)
         msleep(1)
     m.deactivate_motors()
     # If sensing black when it should be sensing white, increase bias
     # If sensing white when it should be sensing black, decrease bias
-    c.LEFT_TOPHAT_BW = int(((max_sensor_value_left + min_sensor_value_left) / 2)) + big_tophat_bias
-    c.RIGHT_TOPHAT_BW = int(((max_sensor_value_right + min_sensor_value_right) / 2)) + big_tophat_bias
-    c.THIRD_TOPHAT_BW = int(((max_sensor_value_third + min_sensor_value_third) / 2)) + small_tophat_bias
-    c.FOURTH_TOPHAT_BW = int(((max_sensor_value_fourth + min_sensor_value_fourth) / 2)) + small_tophat_bias
+    left.set_value_midpoint(int(((max_sensor_value_left + min_sensor_value_left) / 2)) + big_tophat_bias)
+    right.set_value_midpoint(int(((max_sensor_value_right + min_sensor_value_right) / 2)) + big_tophat_bias)
+    third.set_value_midpoint(int(((max_sensor_value_third + min_sensor_value_third) / 2)) + small_tophat_bias)
+    fourth.set_value_midpoint(int(((max_sensor_value_fourth + min_sensor_value_fourth) / 2)) + small_tophat_bias)
+    left.set_black_value(max_sensor_value_left)
+    left.set_white_value(min_sensor_value_left)
+    right.set_black_value(max_sensor_value_right)
+    right.set_white_value(min_sensor_value_right)
+    third.set_black_value(max_sensor_value_third)
+    third.set_white_value(min_sensor_value_third)
+    fourth.set_black_value(max_sensor_value_fourth)
+    fourth.set_white_value(min_sensor_value_fourth)
+    # Set all motor powers based on gyro drive during the calibrate.
     avg_left_speed = total_left_speed / i
     avg_right_speed = total_right_speed / i
-    c.BASE_LM_POWER = int(-avg_left_speed * 2)
-    c.BASE_RM_POWER = int(-avg_right_speed * 2)
-    c.FULL_LM_POWER = c.BASE_LM_POWER
-    c.FULL_RM_POWER = c.BASE_RM_POWER
-    c.HALF_LM_POWER = int(c.BASE_LM_POWER / 2)
-    c.HALF_RM_POWER = int(c.BASE_RM_POWER / 2)
-    c.MAX_TOPHAT_VALUE_RIGHT = max_sensor_value_right
-    c.MIN_TOPHAT_VALUE_RIGHT = min_sensor_value_right
-    c.MAX_TOPHAT_VALUE_LEFT = max_sensor_value_left
-    c.MIN_TOPHAT_VALUE_LEFT = min_sensor_value_left
-    c.MAX_TOPHAT_VALUE_THIRD = max_sensor_value_third
-    c.MIN_TOPHAT_VALUE_THIRD = min_sensor_value_third
+    left_motor.set_base_power(-avg_left_speed * 2)
+    right_motor.set_base_power(-avg_right_speed * 2)
+    left_motor.set_half_power(left_motor.base_power / 2)
+    right_motor.set_half_power(right_motor.base_power / 2)
+    left_motor.set_full_power(left_motor.base_power)
+    right_motor.set_full_power(right_motor.base_power)
     print "Finished Calibrating. Moving back into starting box...\n"
     # Put commands here to get robot to desired starting position.
 
@@ -203,8 +261,8 @@ def calibrate_tophats_and_motors(big_tophat_bias=-1000, small_tophat_bias=600):
 def shutdown(value = 256):
 # Shuts down code without exit by default. Will exit if number is put in parantheses.
     print "Starting shutdown()"
-    mav(c.LEFT_MOTOR, 0)
-    mav(c.RIGHT_MOTOR, 0)
+    left_motor.set_power(0)
+    right_motor.set_power(0)
     msleep(25)
     ao()
     disable_servos()
@@ -222,23 +280,23 @@ def sd(value = 86):
 #--------------------Constant Changing Commands--------------
 
 def halve_speeds():
-    c.BASE_LM_POWER = c.HALF_LM_POWER
-    c.BASE_RM_POWER = c.HALF_RM_POWER
+    left_motor.set_base_power(left_motor.half_power)
+    right_motor.set_base_pwoer(right_motor.half_power)
 
 
 def set_speeds_to(left_speed, right_speed):
-    c.BASE_LM_POWER = left_speed
-    c.BASE_RM_POWER = right_speed
+    left_motor.set_base_power(left_speed)
+    right_motor.set_base_pwoer(right_speed)
 
 
 def change_speeds_by_a_factor_of(speed_multiplier):
-    c.BASE_LM_POWER = c.BASE_LM_POWER * speed_multiplier
-    c.BASE_RM_POWER = c.BASE_RM_POWER * speed_multiplier
+    left_motor.set_base_power(left_motor.base_power * speed_multiplier)
+    right_motor.set_base_power(right_motor.base_power * speed_multiplier)
 
 
 def normalize_speeds():
-    c.BASE_LM_POWER = c.FULL_LM_POWER
-    c.BASE_RM_POWER = c.FULL_RM_POWER
+    left_motor.set_base_power(left_motor.full_power)
+    right_motor.set_base_pwoer(right_motor.full_power)
 
 #-------------------------------Debug------------------------
 

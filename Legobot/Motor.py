@@ -18,6 +18,18 @@ class Motor:
     # This is relative to a forward direction. Current power 
     def get_power(self):
         return self.current_power
+    
+    
+    def get_base_power(self):
+        return self.base_power
+    
+    
+    def get_half_power(self):
+        return self.half_power
+    
+    
+    def get_full_power(self):
+        return self.full_power
 
 
     def set_power(self, power):
@@ -29,6 +41,18 @@ class Motor:
         self.current_power = int(self.direction * power)
         
 
+    def set_base_power(self, new_base_power):
+        self.base_power = new_base_power
+        
+        
+    def set_half_power(self, new_half_power):
+        self.half_power = new_half_power
+        
+        
+    def set_full_power(self, new_full_power):
+        self.full_power = new_full_power
+        
+        
     def clear_tics(self):
         cmpc(self.port)
 

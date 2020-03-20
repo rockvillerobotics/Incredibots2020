@@ -15,9 +15,7 @@ def main():
     print "Starting main()\n"
     u.setup()
     u.calibrate_regionals()  # Calibrates tophats and motor values
-    off(left_motor.port)
-    off(right_motor.port)
-    wait_for_light(c.LIGHT_SENSOR)
+    u.wait_until_round_starts()
     
     
     # Put the commands you want the robot to run here.
