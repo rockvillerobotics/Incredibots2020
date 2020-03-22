@@ -11,7 +11,7 @@ class Motor:
         self.half_power = base_power / 2
         self.full_power = base_power
         self.direction = direction
-        all_motors.append(port)
+        Motor.all_motors.append(port)
         
 
 
@@ -52,6 +52,11 @@ class Motor:
     def set_full_power(self, new_full_power):
         self.full_power = new_full_power
         
+    
+    def set_all_powers(self, new_reference_power):
+        self.set_base_power(new_reference_power)
+        self.set_full_power(new_reference_power)
+        self.set_half_power(new_reference_power / 2)
         
     def clear_tics(self):
         cmpc(self.port)

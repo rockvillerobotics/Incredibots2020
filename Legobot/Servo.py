@@ -15,7 +15,7 @@ class Servo:
             self.direction = 1
         else:
             self.direction = -1
-        all_servos.append(port)
+        Servo.all_servos.append(port)
             
 
     def get_pos(self):

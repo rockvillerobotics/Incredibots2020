@@ -225,48 +225,6 @@ def backwards_through_line_right(time=c.SAFETY_TIME, should_stop=True):
 def get_change_in_angle():
     return(gyro_z())
 
-def calibrate_gyro():
-    ao()
-    msleep(100)
-    i = 0
-    avg = 0
-    while i < 100:
-        avg = avg + get_change_in_angle()
-        msleep(1)
-        i = i + 1
-    global bias
-    bias = avg/i
-    msleep(60)
-
-
-def determine_gyro_conversion_rate():
-    angle = 0
-    print "Starting determine_gyro_conversion_rate()"
-    print "Starting left.senses_white()"
-    while left.senses_white():
-        msleep(10)
-        angle += (get_change_in_angle() - bias) * 10
-    print "Starting left.senses_black()"
-    while left.senses_black():
-        msleep(10)
-        angle += (get_change_in_angle() - bias) * 10
-    print "Starting left.senses_white()"
-    while left.senses_white():
-        msleep(10)
-        angle += (get_change_in_angle() - bias) * 10
-    print "Starting left.senses_black()"
-    while left.senses_black():
-        msleep(10)
-        angle += (get_change_in_angle() - bias) * 10
-    print "Starting left.senses_white()"
-    while left.senses_white():
-        msleep(10)
-        angle += (get_change_in_angle() - bias) * 10
-    "Stopping motors."
-    m.deactivate_motors()
-    c.DEGREE_CONVERSION_RATE = abs(angle / 360.0) #- 92
-    print "DEGREE_CONVERSION_RATE: " + str(c.DEGREE_CONVERSION_RATE)
-
 #-----------------------Gyro-Based Movement Commands-------------------------------------
 # The gyro sensor can determine what angle the robot is at any given point in time. So, if the gyro sensor senses
 # an angle other than 0, then it is clear that the bot is veering. So, the robot veers in the opposite direction to
@@ -286,7 +244,7 @@ def drive_gyro(time, should_stop=True):
         right_speed = right_motor.base_power - (error + memory)
         m.activate_motors(left_speed, right_speed)
         msleep(10)
-        angle += (get_change_in_angle() - bias) * 10
+        angle += (get_change_in_angle() - u.gyro_bias) * 10
         error = 0.034470956 * angle  # Positive error means veering left. Negative means veering right.
         memory += 0.001 * error
     if should_stop:
@@ -307,7 +265,7 @@ def backwards_gyro(time, should_stop=True):
         right_speed = -right_motor.base_power - (error + memory)
         m.activate_motors(left_speed, right_speed)
         msleep(10)
-        angle += (get_change_in_angle() - bias) * 10
+        angle += (get_change_in_angle() - u.gyro_bias) * 10
         error = 0.034470956 * angle  # Positive error means veering right. Negative means veering left.
         memory += 0.001 * error
     if should_stop:
@@ -325,13 +283,13 @@ def turn_gyro(degrees, should_stop=True):
         sec = seconds() + c.SAFETY_TIME
         while angle < target_angle and seconds() < sec:
             msleep(10)
-            angle += (get_change_in_angle() - bias) * 10
+            angle += (get_change_in_angle() - u.gyro_bias) * 10
     else:
         m.base_turn_right()
         sec = seconds() + c.SAFETY_TIME
         while angle > target_angle and seconds() < sec:
             msleep(10)
-            angle += (get_change_in_angle() - bias) * 10
+            angle += (get_change_in_angle() - u.gyro_bias) * 10
     if should_stop:
         m.deactivate_motors()
 
@@ -364,7 +322,7 @@ def drive_gyro_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
         right_speed = right_motor.base_power - (error + memory)
         m.activate_motors(left_speed, right_speed)
         msleep(10)
-        angle += (get_change_in_angle() - bias) * 10
+        angle += (get_change_in_angle() - u.gyro_bias) * 10
         error = 0.034470956 * angle  # Positive error means veering left. Negative means veering right.
         memory += 0.00001 * error
     if should_stop:
@@ -385,7 +343,7 @@ def backwards_gyro_until(boolean_function, time=c.SAFETY_TIME, should_stop=True)
         right_speed = -right_motor.base_power - (error + memory)
         m.activate_motors(left_speed, right_speed)
         msleep(10)
-        angle += (get_change_in_angle() - bias) * 10
+        angle += (get_change_in_angle() - u.gyro_bias) * 10
         error = 0.034470956 * angle  # Positive error means veering left. Negative means veering right.
         memory += 0.001 * error
     if should_stop:
@@ -471,7 +429,6 @@ def backwards_gyro_to_line_third(time=c.SAFETY_TIME, should_stop=True):
 
 #----------------Webcam-----------------
 
-max_length =
 def initialize_camera():
     # Wait two seconds for camera to initialize
     print "Initializing Camera"
@@ -482,31 +439,3 @@ def initialize_camera():
         i += 1
         msleep(1)
     print "Finished Step 100\n"
-
-#----------------Screen Graphics-----------------
-
-@print_function_name_with_arrows
-def open_graphics_window():
-    if not(c.IS_GRAPHICS_OPEN):
-        console_clear()
-        graphics_open(max_length, max_height) # Creates the graphics array with the given size
-        graphics_fill(255, 255, 255)  # Fills screen with white          
-    c.IS_GRAPHICS_OPEN = True
-
-
-@print_function_name_with_arrows
-def close_graphics_window():
-    graphics_close()
-    c.IS_GRAPHICS_OPEN = False
-
-
-def graphics():
-    console_clear()
-    open_graphics_window()
-    graphics_fill(255, 255, 255)  # Fills screen with white
-
-    # Place graphics here.
-
-    graphics_update()
-
-

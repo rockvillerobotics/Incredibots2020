@@ -11,18 +11,10 @@ import utils as u
 @print_function_name
 def sample_command():
     m.drive(1000)
-    left.lfollow_until
-    
-    lfollow_left_until_black_right()
-    
-    
-    left.lfollow_until(mode=INSIDE_LINE, boolean=right.senses_black)
-
+    left.lfollow_until(boolean=right.senses_black, mode=INSIDE_LINE)
+ 
 
 @print_function_name
 def pull_swings():
-    g.drive_gyro(500)
-    msleep(100)
-    g.backwards_gyro(1000)
-
-# Should get 100 points, but need build to be completed first. 
+    s.drive_gyro()
+    # Should get 100 points, but need build to be completed first. 
