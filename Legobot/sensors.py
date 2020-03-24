@@ -214,13 +214,7 @@ def backwards_through_line_right(time=c.SAFETY_TIME, should_stop=True):
     backwards_until(right.senses_white, time, should_stop)
 
 
-#-----------------------Gyro Calibration Commands-------------------------------------
-# Calibrate gyro "zeroes" the gyro sensor. It determines what the gyro reads when the bot is resting.
-# Determine gyro conversion rate figures out how many degrees the gyro sensor counts during a 360 degree
-#   turn and uses that as a basis for all other turns
-# Calibrate motor powers has the robot drive straight using the gyro sensor and sets the powers being used to drive
-#   straight to be the base powers.
-
+#-----------------------Basic Gyro Commands---------------------------------------------    
 
 def get_change_in_angle():
     return(gyro_z())

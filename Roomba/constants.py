@@ -13,32 +13,6 @@ ARM_MOTOR = NO_CURRENT_VALUE
 CURRENT_LM_POWER = 0
 CURRENT_RM_POWER = 0
 #---------------------------------------------Servos-------------------------------------------
-
-# Servo Port
-ARM_SERVO = 2
-MAGNET_ARM_SERVO = 0
-MICRO_SERVO = 1
-WRIST_SERVO = 3
-CLAW_SERVO = NO_CURRENT_VALUE
-
-# Servo Limits
-MAX_SERVO_LIMIT = 2047
-MIN_SERVO_LIMIT = 0
-    
-MAX_ARM_POS = 1977
-MIN_ARM_POS = 50
-
-MAX_MAGNET_ARM_POS = 1900
-MIN_MAGNET_ARM_POS = 100
-
-MAX_CLAW_POS = 1900
-MIN_CLAW_POS = 100
-
-MAX_MICRO_POS = 1900
-MIN_MICRO_POS = 100
-
-MAX_WRIST_POS = 1900
-MIN_WRIST_POS = 100
     
 # Servo Base Positions
 ARM_UP_POS = 138
@@ -75,8 +49,8 @@ MICRO_START_POS = MICRO_RETRACTED_POS
 #---------------------------------------------Movement---------------------------------------------
 
 # Turn Values
-RIGHT_TURN_TIME = 891  # 1650
-LEFT_TURN_TIME = 891  # 1650
+RIGHT_TURN_TIME = 891
+LEFT_TURN_TIME = 891
 
 # Motor Values
 BASE_LM_POWER = 199
@@ -99,6 +73,14 @@ DEPTH_SENSOR = 0
 SECOND_DEPTH_SENSOR = 1
 CLAW_TOPHAT = 2
 LIGHT_SENSOR = 5
+
+# Locations
+LEFT = 1
+RIGHT = -1
+
+# Line Follow Modes
+STANDARD = 1
+INSIDE_LINE = -1
 
 # Analog Sensor Values
 LCLIFF_BW = 2000  # Min is 0, max is 4950

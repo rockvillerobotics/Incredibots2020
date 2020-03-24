@@ -20,6 +20,8 @@ class Tophat:
         self.tophat_type = tophat_type
         Tophat.all_tophats.append(self)
 
+    def get_value(self):
+        return self.get_value())
 
     def get_value_midpoint(self):
         return self.value_midpoint
@@ -37,18 +39,18 @@ class Tophat:
         self.white_value = white_value
         
     def senses_black(self):
-        return analog(self.port) < self.value_midpoint
+        return self.get_value() < self.value_midpoint
     
     
     def senses_white(self):
-        return analog(self.port) > self.value_midpoint
+        return self.get_value()) > self.value_midpoint
     
     
     def compare_and_replace_extremes(self):
-        if analog(self.port) > self.black_value:
-            self.black_value = analog(self.port)
-        elif analog(self.port) < self.white_value:
-            self.white_value = analog(self.port)
+        if self.get_value()) > self.black_value:
+            self.black_value = self.get_value())
+        elif self.get_value()) < self.white_value:
+            self.white_value = self.get_value())
     
     
     def determine_midpoint_from_extremes(self, bias):
@@ -62,7 +64,7 @@ class Tophat:
         integral = 0
         sec = seconds() + time / 1000.0
         while seconds() < sec:
-            norm_reading = 100.0 * (analog(self.port) - self.white_value) / (self.black_value - self.white_value)
+            norm_reading = 100.0 * (self.get_value()) - self.white_value) / (self.black_value - self.white_value)
             error = target - norm_reading       # Positive error means white, negative means black.
             derivative = error - last_error     # If rate of change is going negative, need to veer left
             last_error = error
@@ -97,7 +99,7 @@ class Tophat:
         integral = 0
         sec = seconds() + time / 1000.0
         while seconds() < sec and not(boolean_function()):
-            norm_reading = 100.0 * (analog(self.port) - self.white_value) / (self.black_value - self.white_value)
+            norm_reading = 100.0 * (self.get_value()) - self.white_value) / (self.black_value - self.white_value)
             error = target - norm_reading       # Positive error means white, negative means black.
             derivative = error - last_error     # If rate of change is going negative, need to veer left
             last_error = error

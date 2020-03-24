@@ -1,4 +1,4 @@
-from wallaby import *
+from wombat import *
 from decorators import *
 import constants as c
 import movement as m
