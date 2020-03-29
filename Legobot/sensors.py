@@ -8,22 +8,22 @@ import utils as u
 # -------------------------------States------------------------
 
 def pressed_left():
-    return(digital(c.LEFT_LIMIT_SWITCH) == 1)
+    return digital(c.LEFT_LIMIT_SWITCH) == 1
 
 def unpressed_left():
-    return(digital(c.LEFT_LIMIT_SWITCH) == 0)
+    return digital(c.LEFT_LIMIT_SWITCH) == 0
 
 def pressed_right():
-    return(digital(c.RIGHT_LIMIT_SWITCH) == 1)
+    return digital(c.RIGHT_LIMIT_SWITCH) == 1
 
 def unpressed_right():
-    return(digital(c.RIGHT_LIMIT_SWITCH) == 0)
+    return digital(c.RIGHT_LIMIT_SWITCH) == 0
 
 def pressed_both():
-    return(pressed_left() or pressed_right())
+    return pressed_left() or pressed_right()
 
 def unpressed_either():
-    return(not(pressed_left() or pressed_right()))
+    return not(pressed_left() or pressed_right())
 
 # -------------------------------Wait Until Event Commands--------------------
 

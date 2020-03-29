@@ -1,7 +1,6 @@
 from wombat import *
 from decorators import *
 import constants as c
-import objects as o
 import movement as m
 
 class Cliff:
