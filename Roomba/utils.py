@@ -306,7 +306,7 @@ def reset_roomba(ms_before_roomba_turns_back_on=10):
 @print_function_name
 def test_movement():  # Used to see if movements and their defaults function as intended
     print "Testing movement\n"
-    m.forwards()
+    m.forward()
     msleep(500)  # Using msleep() instead of wait() to make sure each command turns off its wheels
     m.backwards()
     msleep(500)
@@ -407,7 +407,7 @@ def test_cliffs(time=120):
 @print_function_name
 def runtest():
     create_connect()
-    m.base_forwards()
+    m.base_forward()
     msleep(3000)
     m.deactivate_motors()
     create_disconnect()

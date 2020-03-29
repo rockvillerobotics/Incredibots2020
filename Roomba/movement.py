@@ -18,7 +18,7 @@ def isBumpSwitchNotBumped():
 
 #-----------------------------Base Commands-------------------------
 
-def base_forwards(speed_multiplier=1.0):
+def base_forward(speed_multiplier=1.0):
     activate_motors(int(speed_multiplier * c.BASE_LM_POWER), int(speed_multiplier * c.BASE_RM_POWER))
 
 
@@ -86,9 +86,9 @@ def deactivate_motors():
     c.CURRENT_RM_POWER = 0
 
 
-def forwards(time=c.DEFAULT_DRIVE_TIME, speed_multiplier=1.0):
-    base_forwards(speed_multiplier)
-    print "Drive forwards for %d ms" % time
+def forward(time=c.DEFAULT_DRIVE_TIME, speed_multiplier=1.0):
+    base_forward(speed_multiplier)
+    print "Drive forward for %d ms" % time
     msleep(int(time))
     deactivate_motors()
 

@@ -433,3 +433,5 @@ def initialize_camera():
         i += 1
         msleep(1)
     print "Finished Step 100\n"
+
+#----------------New Stuff-------------------
