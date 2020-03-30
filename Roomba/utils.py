@@ -1,5 +1,6 @@
 from wombat import *
 from decorators import *
+from objects import *
 import constants as c
 import movement as m
 import gyro as g
@@ -25,20 +26,28 @@ def setup():
     print "Starting setup()"
     reset_roomba()
     msleep(20)
-    g.calibrate_gyro()
-    enable_servo(c.ARM_SERVO)
-    enable_servo(c.MAGNET_ARM_SERVO)
-    enable_servo(c.MICRO_SERVO)
-    enable_servo(c.WRIST_SERVO)
-    print "Arm servo enabled = %d\n" % get_servo_enabled(c.ARM_SERVO)
-    print "Magnet arm servo enabled = %d\n" % get_servo_enabled(c.MAGNET_ARM_SERVO)
-    m.move_arm(c.ARM_START_POS)
-    m.move_magnet_arm(c.MAGNET_ARM_START_POS)
-    m.move_micro(c.MICRO_START_POS)
-    m.move_wrist(c.WRIST_START_POS)
+    calibrate_gyro()
+    for motor in Motor.all_motors:
+        cmpc(motor)
+    for servo in Servo.all_servos:
+        enable_servo(servo)
+        servo.move(servo.starting_pos)
     print "Setup complete\n"
 
 
+@print_function_name
+def calibrate_gyro():
+    i = 0
+    avg = 0
+    while i < 100:
+        avg = avg + gyro_z()
+        msleep(1)
+        i = i + 1
+    global gyro_bias
+    gyro_bias = avg / i
+    msleep(60)
+    
+    
 def calibrate():
     # Initialize variables.
     c.MIN_SENSOR_VALUE_LCLIFF = 90000
