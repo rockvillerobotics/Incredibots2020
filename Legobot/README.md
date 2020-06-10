@@ -1,4 +1,4 @@
-## :file_folder: Code Structure
+## :file_folder: Legobot Code Structure
 The code is broken up as follows:
 
 - `actions.py`: Combines lower-level commands into high-level sequences.
@@ -13,6 +13,7 @@ The code is broken up as follows:
 - `webcam.py`: Interfaces with the camera.
 
 [Decorators example]: https://github.com/dotcomstar/DecoratorsExample
+
 
 ## Legobot build:
 *Still working on it* :see_no_evil:
