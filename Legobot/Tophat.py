@@ -21,7 +21,7 @@ class Tophat:
         Tophat.all_tophats.append(self)
 
     def get_value(self):
-        return self.get_value())
+        return analog(self.port)
 
     def get_value_midpoint(self):
         return self.value_midpoint
