@@ -14,7 +14,7 @@ class Depth:
         return analog(self.port)
 
 
-    def senses_depth(self):
+    def senses_object(self):
         return self.get_value() > self.value_midpoint
     
     
