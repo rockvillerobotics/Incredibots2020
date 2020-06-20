@@ -1,4 +1,5 @@
 from wombat import *
+import constants as c
 
 class Motor:
     all_motors = []
@@ -18,18 +19,6 @@ class Motor:
     # This is relative to a forward direction. Current power 
     def get_power(self):
         return self.current_power
-    
-    
-    def get_base_power(self):
-        return self.base_power
-    
-    
-    def get_half_power(self):
-        return self.half_power
-    
-    
-    def get_full_power(self):
-        return self.full_power
 
 
     def set_power(self, power):
@@ -39,32 +28,21 @@ class Motor:
             power = -1450
         mav(self.port, int(self.direction * power))
         self.current_power = int(self.direction * power)
-        
 
-    def set_base_power(self, new_base_power):
-        self.base_power = new_base_power
-        
-        
-    def set_half_power(self, new_half_power):
-        self.half_power = new_half_power
-        
-        
-    def set_full_power(self, new_full_power):
-        self.full_power = new_full_power
-        
     
-    def set_all_powers(self, new_reference_power):
-        self.set_base_power(new_reference_power)
-        self.set_full_power(new_reference_power)
-        self.set_half_power(new_reference_power / 2)
-        
-    def clear_tics(self):
-        cmpc(self.port)
+    def set_reference_powers(self, new_reference_power):
+        self.base_power = new_reference_power
+        self.full_power = new_reference_power
+        self.half_power = new_reference_power / 2
 
 
     # This is relative to a forward direction.
     def get_tics(self):
         return gmpc(self.port) * self.direction
+
+
+    def clear_tics(self):
+        cmpc(self.port)
     
     
     def accelerate_to(self, desired_power):
@@ -81,9 +59,36 @@ class Motor:
                 set_power(self.port, intermediate_velocity)
                 intermediate_velocity += velocity_change
                 msleep(1)
-        set_power(self.port, desired_power)  # Ensures actual desired value is reached
+        self.set_power(desired_power)  # Ensures actual desired value is reached
 
+    # TODO add decelleration
+    def stop(self):
+        self.set_power(0)
+
+
+    @print_function_name_with_arrows
+    def forwards_until(self, boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
+        # Left motor goes forwards until right tophat senses black
+        self.accelerate_to(self.base_power)
+        sec = seconds() + time / 1000.0
+        while seconds() < sec and not(boolean_function()):
+            msleep(1)
+        if should_stop:
+            self.stop()
     
+    
+    @print_function_name_with_arrows
+    def backwards_until(self, boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
+        # Left motor goes forwards until right tophat senses black
+        self.accelerate_to(-self.base_power)
+        sec = seconds() + time / 1000.0
+        while seconds() < sec and not(boolean_function()):
+            msleep(1)
+        if should_stop:
+            self.stop()
+            
+            
+    # This function treats the motor like a servo.
     @print_function_name_with_arrows
     def move(self, desired_tic_location, desired_speed):
         if desired_tic_location - self.get_tics() > 0:
@@ -107,4 +112,4 @@ class Motor:
                 speed = -11
             self.set_power(speed)
             msleep(1)
-        mav(motor_port, 0)
+        self.stop()

@@ -23,21 +23,11 @@ class Tophat:
     def get_value(self):
         return analog(self.port)
 
+
     def get_value_midpoint(self):
         return self.value_midpoint
-
-
-    def set_value_midpoint(self, value_midpoint):
-        self.value_midpoint = value_midpoint
         
-    
-    def set_black_value(self, black_value):
-        self.black_value = black_value
-    
-    
-    def set_white_value(self, white_value):
-        self.white_value = white_value
-        
+
     def senses_black(self):
         return self.get_value() < self.value_midpoint
     

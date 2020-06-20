@@ -39,75 +39,26 @@ def wait_until(boolean_function, time=c.SAFETY_TIME):
 @print_function_name
 def align_close():
     # Aligns completely on the side of the line closest to the claw
-    left_backwards_until_white()
-    right_backwards_until_white()
-    right_forwards_until_black()
-    left_forwards_until_black()
+    left_motor.backwards_until(left.senses_white())
+    right_motor.backwards_until(right.senses_white())
+    right_motor.forwards_until(right.senses_black())
+    left_motor.forwards_until(left.senses_black())
 
 
 @print_function_name
 def align_far(left_first=True):
     # Aligns completely on the side of the line closest to the camera
     if left_first == True:
-        right_forwards_until_white()
-        left_forwards_until_white()
-        left_backwards_until_black()
-        right_backwards_until_black()
+        right_motor.forwards_until(right.senses_white())
+        left_motor.forwards_until(left.senses_white())
+        left_motor.backwards_until(left.senses_black())
+        right_motor.backwards_until(right.senses_blac())
     else:
-        left_forwards_until_white()
-        right_forwards_until_white()
-        right_backwards_until_black()
-        left_backwards_until_black()
+        left_motor.forwards_until(left.senses_white())
+        right_motor.forwards_until(right.senses_white())
+        right_motor.backwards_until(right.senses_blac())
+        left_motor.backwards_until(left.senses_black())
 
-
-# -------------------------------Single Motor Align Commands ------------------------
-
-@print_function_name_with_arrows
-def left_forwards_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
-    # Left motor goes forwards until right tophat senses black
-    left_motor.accelerate_to(left_motor.base_power)
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    wait_until(boolean_function, time)
-    if should_stop:
-        m.deactivate_motors()
-
-
-@print_function_name_with_arrows
-def right_forwards_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
-    # Right motor goes forwards until right tophat senses black
-    right_motor.accelerate_to(right_motor.base_power)
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    wait_until(boolean_function, time)
-    if should_stop:
-        m.deactivate_motors()
-
-
-@print_function_name_with_arrows
-def left_backwards_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
-    # Left motor goes backwards until left tophat senses black
-    left_motor.accelerate_to(left_motor.base_power)
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    wait_until(boolean_function, time)
-    if should_stop:
-        m.deactivate_motors()
-
-
-@print_function_name_with_arrows
-def right_backwards_until(boolean_function, time=c.SAFETY_TIME, should_stop=True):
-    # Right motor goes back until right tophat senses black
-    right_motor.accelerate_to(right_motor.base_power)
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    wait_until_black_right(time)
-    if should_stop:
-        m.deactivate_motors()
 
 
 # -------------------------------Point Turn Align Commands ------------------------
