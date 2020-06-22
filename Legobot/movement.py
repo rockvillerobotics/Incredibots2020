@@ -5,6 +5,70 @@ from objects import *
 import constants as c
 import sensors as s
 
+#------------------------------- Movement Commands-------------------------------
+
+@print_function_name_with_arrows
+def drive_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
+    base_drive()
+    if time == 0:
+        should_stop = False
+        time = c.SAFETY_TIME
+    wait_until(boolean_function, time)
+    if should_stop:
+        m.deactivate_motors()
+
+
+@print_function_name_with_arrows
+def backwards_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
+    """This function goes backwards until an event.
+
+    Args:
+        boolean_function (function): The event you to go until reached
+        time (number, optional): The code will automatically after this amount of time. This is to avoid infinite loops. Defaults to c.SAFETY_TIME.
+        should_stop (bool, optional): The robot will stop after this code ends if this is true. Defaults to True.
+    """
+    base_backwards()
+    if time == 0:
+        should_stop = False
+        time = c.SAFETY_TIME
+    wait_until(boolean_function, time)
+    if should_stop:
+        m.deactivate_motors()
+
+
+@print_function_name_with_arrows
+def turn_left_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
+    base_turn_left()
+    if time == 0:
+        should_stop = False
+        time = c.SAFETY_TIME
+    wait_until(boolean_function, time)
+    if should_stop:
+        m.deactivate_motors()
+
+
+@print_function_name_with_arrows
+def turn_right_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
+    base_turn_right()
+    if time == 0:
+        should_stop = False
+        time = c.SAFETY_TIME
+    wait_until(boolean_function, time)
+    if should_stop:
+        m.deactivate_motors()
+
+
+def stop_for(time=1000):  # Same as msleep command, but stops the wheels.
+    deactivate_motors()
+    msleep(time)
+    
+    
+def wait_until(boolean_function, time=c.SAFETY_TIME):
+    if time == 0:
+        time = c.SAFETY_TIME_NO_STOP
+    sec = seconds() + time / 1000.0
+    while seconds() < sec and not(boolean_function()):
+        msleep(1)
 #------------------------------- Base Commands -------------------------------
 #  These commands start the motors in a certain way. They are just activate motors but in a specific direction.
 
@@ -23,102 +87,24 @@ def base_turn_right(speed_multiplier=1.0):
 def base_backwards(speed_multiplier=1.0):
     activate_motors(int(speed_multiplier * -1 * left_motor.base_power), int(speed_multiplier * -1 * right_motor.base_power))
 
-#------------------------------- Movement Commands-------------------------------
-# The most basic of movement. Turns on wheels for a certain amount of time, and then turns off the wheels.
-# There is a lot of mumbo jumbo here to keep consistency with the rest of the code, but if you can understand this
-# you can understand every other command here.
+#------------------------------- Timed Movement Commands-------------------------------
 
-def drive(time=c.DEFAULT_DRIVE_TIME, should_stop=True, speed_multiplier=1.0):
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    base_drive(speed_multiplier)
-    print "Drive forwards for %d ms" % time
-    msleep(time)
-    if should_stop:
-        deactivate_motors()
+# Shorthand for moving until time. Should stop is passed to the parent function.
+def drive(time, should_stop=True):
+    drive_until(time=time, should_stop=should_stop)
 
 
-def turn_left(time=c.LEFT_TURN_TIME, should_stop=True, speed_multiplier=1.0):
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    base_turn_left(speed_multiplier)
-    print "Turn left for %d ms" % time
-    msleep(time)
-    if should_stop:
-        deactivate_motors()
+def backwards(time, should_stop=True):
+    backwards_until(time=time, should_stop=should_stop)
 
 
-def turn_right(time=c.RIGHT_TURN_TIME, should_stop=True, speed_multiplier=1.0):
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    base_turn_right(speed_multiplier)
-    print "Turn right for %d ms" % time
-    msleep(time)
-    if should_stop:
-        deactivate_motors()
+# By default the turns will be 90 degree turns. The exact time value needs calibration.
+def turn_left(time=c.LEFT_TURN_TIME, should_stop=True):
+    turn_left_until(time=time, should_stop=should_stop)
 
 
-def backwards(time=c.DEFAULT_BACKWARDS_TIME, should_stop=True, speed_multiplier=1.0):
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    base_backwards(speed_multiplier)
-    print "Drive backwards for %d ms"%time
-    msleep(time)
-    if should_stop:
-        deactivate_motors()
-
-
-def stop_for(time=1000):  # Same as msleep command, but stops the wheels.
-    deactivate_motors()
-    msleep(time)
-
-#------------------------------- No Print Movement -------------------------------
-# These, as the name implies, do the same thing as the basic movement commands just without the prints.
-# At one time, these were very useful commands. But, as time has gone on and techniques have been improved, they
-# have become obsolete. We keep them as an archaic reference to what things used to be. We're nostalgic like that.
-
-def drive_no_print(time=c.DEFAULT_DRIVE_TIME, should_stop=True, speed_multiplier=1.0):
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    base_drive(speed_multiplier)
-    msleep(time)
-    if should_stop:
-        deactivate_motors()
-
-
-def turn_left_no_print(time=c.LEFT_TURN_TIME, should_stop=True, speed_multiplier=1.0):
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    base_turn_left(speed_multiplier)
-    msleep(time)
-    if should_stop:
-        deactivate_motors()
-
-
-def turn_right_no_print(time=c.RIGHT_TURN_TIME, should_stop=True, speed_multiplier=1.0):
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    base_turn_right(speed_multiplier)
-    msleep(time)
-    if should_stop:
-        deactivate_motors()
-
-
-def backwards_no_print(time=c.DEFAULT_BACKWARDS_TIME, should_stop=True, speed_multiplier=1.0):
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    base_backwards(speed_multiplier)
-    msleep(time)
-    if should_stop:
-        deactivate_motors()
+def turn_right(time=c.RIGHT_TURN_TIME, should_stop=True):
+    turn_right_until(time=time, should_stop=should_stop)
 
 #------------------------------- Basic Movement Commands -------------------------------
 # These commands are really the building blocks of the whole code. They're practical; they're
@@ -151,6 +137,21 @@ def deactivate_motors():
     right_motor.set_power(0)
     left_motor.current_power = 0
     right_motor.current_power = 0
+
+
+#------------------------------- Line Shorthand ---------------------------------------
+# These commands are more intuitive ways to move around lines.
+
+@print_function_name
+def drive_through_line(tophat, *, time=c.SAFETY_TIME, should_stop=True):
+    drive_until(tophat.senses_black, should_stop=False)
+    drive_until(tophat.senses_white, time, should_stop)
+    
+
+@print_function_name
+def backwards_through_line(tophat, *, time=c.SAFETY_TIME, should_stop=True):
+    backwards_until(tophat.senses_black, should_stop=False)
+    backwards_until(tophat.senses_white, time, should_stop)
 
 
 #------------------------------- Tics Movement Commands -------------------------------
