@@ -62,3 +62,4 @@ $ git commit -m "Write a descriptive commit message that describes all of the ch
 
  ## :link: Useful Links
  - [Git Introduction](https://guides.github.com/introduction/git-handbook/)
+ - [Our style guidelines](https://github.com/rockvillerobotics/guides)
