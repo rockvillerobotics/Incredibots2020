@@ -62,7 +62,3 @@ $ git commit -m "Write a descriptive commit message that describes all of the ch
 
  ## :link: Useful Links
  - [Git Introduction](https://guides.github.com/introduction/git-handbook/)
- - [Intro to HTML and CSS](http://learn.shayhowe.com/html-css/)
- - [Very good (but super long) web dev course](http://www.freecodecamp.com/)
- - [Flask video tutorials by sentdex](https://pythonprogramming.net/practical-flask-introduction/)
-
