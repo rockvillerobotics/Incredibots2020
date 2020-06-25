@@ -8,7 +8,7 @@
 </p>
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/32310846/77021958-a7b94280-695e-11ea-811f-2bb09cc974b5.jpg" width="350"/></a>
+  <img src="photos/Just the eyes transparent.png" width="350"/></a>
 </p>
 
 ### Check out [our wiki] for more information about us.
