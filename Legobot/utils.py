@@ -84,7 +84,7 @@ def wait_until_round_starts(time=0):
 
 
 def calibrate_tophats(big_tophat_bias=-1000, small_tophat_bias=600):
-    # Code to calibrate the tophat midpoint values.
+    """Code to calibrate the tophat midpoint values."""
     # If sensing black when it should be sensing white, increase bias.
     # If sensing white when it should be sensing black, decrease bias.
     print "Running calibrate()"

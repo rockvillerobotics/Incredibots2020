@@ -1,4 +1,4 @@
-# Codes involving general motor or servo motion go here
+"""Codes involving general motor or servo motion go here"""
 from wallaby import *
 from decorators import *
 from objects import *

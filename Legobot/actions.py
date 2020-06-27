@@ -1,4 +1,4 @@
-## The bulk of commands should go here
+"""The bulk of commands should go here"""
 
 from wallaby import *
 from decorators import *
