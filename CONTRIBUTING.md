@@ -6,7 +6,7 @@
 [GitPod online editor]: https://www.gitpod.io/
 
 2. If you are using Gitpod, open Gitpod and link your GitHub account. If you want to make changes to GitHub from Gitpod, go to settings and enable writing to public repositories.
-Then skip to step 5.
+Then skip to step 4.
 
 3. If you are using a local editor such as VSCode or Atom, download [git](https://git-scm.com/downloads).
  
