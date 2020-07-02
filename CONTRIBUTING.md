@@ -6,7 +6,7 @@
 [GitPod online editor]: https://www.gitpod.io/
 
 2. If you are using Gitpod, open Gitpod and link your GitHub account. If you want to make changes to GitHub from Gitpod, go to settings and enable writing to public repositories.
-Then skip to step 4.
+Then skip to step 5.
 
 3. If you are using a local editor such as VSCode or Atom, download [git](https://git-scm.com/downloads).
  
@@ -15,9 +15,9 @@ Then skip to step 4.
 $ git clone https://github.com/rockvillerobotics/Incredibots2020.git
 ```
 
-4. If you haven't already, take a brief look at [how git works](https://guides.github.com/introduction/git-handbook/)
+5. If you haven't already, take a brief look at [how git works](https://guides.github.com/introduction/git-handbook/)
 
-5. Now, you're all set :smile:
+6. Now, you're all set :smile:
 
 ## :rocket: Contribution Guide
 Let's say you want to add a new feature to the code. Here are the steps you would follow (assuming you use `git` from the command line):
