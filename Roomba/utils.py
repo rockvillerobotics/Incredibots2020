@@ -1,5 +1,6 @@
-from wallaby import *
+from wombat import *
 from decorators import *
+from objects import *
 import constants as c
 import movement as m
 import gyro as g
@@ -25,20 +26,28 @@ def setup():
     print "Starting setup()"
     reset_roomba()
     msleep(20)
-    g.calibrate_gyro()
-    enable_servo(c.ARM_SERVO)
-    enable_servo(c.MAGNET_ARM_SERVO)
-    enable_servo(c.MICRO_SERVO)
-    enable_servo(c.WRIST_SERVO)
-    print "Arm servo enabled = %d\n" % get_servo_enabled(c.ARM_SERVO)
-    print "Magnet arm servo enabled = %d\n" % get_servo_enabled(c.MAGNET_ARM_SERVO)
-    m.move_arm(c.ARM_START_POS)
-    m.move_magnet_arm(c.MAGNET_ARM_START_POS)
-    m.move_micro(c.MICRO_START_POS)
-    m.move_wrist(c.WRIST_START_POS)
+    calibrate_gyro()
+    for motor in Motor.all_motors:
+        cmpc(motor)
+    for servo in Servo.all_servos:
+        enable_servo(servo)
+        servo.move(servo.starting_pos)
     print "Setup complete\n"
 
 
+@print_function_name
+def calibrate_gyro():
+    i = 0
+    avg = 0
+    while i < 100:
+        avg = avg + gyro_z()
+        msleep(1)
+        i = i + 1
+    global gyro_bias
+    gyro_bias = avg / i
+    msleep(60)
+    
+    
 def calibrate():
     # Initialize variables.
     c.MIN_SENSOR_VALUE_LCLIFF = 90000
@@ -212,71 +221,6 @@ def calibrate_with_gyro_angle_calibration():
     shut_down_in(120)  # URGENT: PUT BACK IN BEFORE COMPETITION
 
 
-def calibrate_manually():
-    calibrateBW_front_cliffs()
-    calibrateBW_side_cliffs()
-
-
-def calibrateBW_front_cliffs(time = 90):
-    print "Running calibrateBW_front_cliffs()"
-    print "You have %d seconds until calibration ends" % time
-    print "Press L(eft) button to continue actual code using default bw_front values"
-    print "Press R(ight) button to set cliff bw_front values\n"
-    print "Waiting for user input...\n"
-    sec = seconds() + time
-    while seconds() < sec:
-        if isLeftButtonPressed():
-            print "Left button pressed. Continuing with code"
-            print "Left front cliff bw = %d for actual code" % c.LFCLIFF_BW
-            print "Right front cliff bw = %d for actual code\n" % c.RFCLIFF_BW
-            break
-        elif isRightButtonPressed():
-            print "Right button pressed"
-            print "Calculating bw_front values...\n\n"
-            c.LFCLIFF_BW = get_create_lfcliff_amt()
-            c.RFCLIFF_BW = get_create_rfcliff_amt()
-            msleep(1000)
-            print "Left front cliff bw = %d now" % c.LFCLIFF_BW
-            print "Right front cliff bw = %d now\n" % c.RFCLIFF_BW
-            print "If satisfied with above bw_front values, press L(eft) button"
-            print "If not, press R(ight) button again"
-            print "Waiting for user input...\n"
-    print "Cliff bw_front calibration complete"
-    print "To user: Put robot in starting position"
-    msleep(1000)
-
-
-def calibrateBW_side_cliffs(time = 90):
-    print "Running calibrateBW_side_cliffs()"
-    print "You have %d seconds until calibration ends" % time
-    print "Press L(eft) button to continue actual code using default bw_side values"
-    print "Press R(ight) button to set cliff bw_side values\n"
-    print "Waiting for user input...\n"
-    sec = seconds() + time
-    while seconds() < sec:
-        if isLeftButtonPressed():
-            print "Left button pressed. Continuing with code"
-            print "Left side cliff bw = %d for actual code" % c.LCLIFF_BW
-            print "Right side cliff bw = %d for actual code\n" % c.RCLIFF_BW
-            break
-        elif isRightButtonPressed():
-            print "Right button pressed"
-            print "Calculating bw_side values...\n\n"
-            c.LCLIFF_BW = get_create_lcliff_amt()
-            c.RCLIFF_BW = get_create_rcliff_amt()
-            msleep(1000)
-            print "Left side cliff bw = %d now" % c.LCLIFF_BW
-            print "Right side cliff bw = %d now" % c.RCLIFF_BW
-            print "If satisfied with above bw_side values, press L(eft) button"
-            print "If not, press R(ight) button again"
-            print "Waiting for user input...\n"
-    print "Cliff bw_side calibration complete"
-    print "To user: Put robot in starting position"
-    msleep(2000)
-    #wait_for_light(c.LIGHT_SENSOR)
-    shut_down_in(100)
-
-
 def shutdown(value = 255):
     print "Shutdown started"
     m.deactivate_motors()
@@ -306,7 +250,7 @@ def reset_roomba(ms_before_roomba_turns_back_on=10):
 @print_function_name
 def test_movement():  # Used to see if movements and their defaults function as intended
     print "Testing movement\n"
-    m.forwards()
+    m.forward()
     msleep(500)  # Using msleep() instead of wait() to make sure each command turns off its wheels
     m.backwards()
     msleep(500)
@@ -375,23 +319,6 @@ def test_bump(time=120):
 
 
 @print_function_name
-def test_ir(time=120):
-    sec = seconds() + time
-    while seconds() < sec:
-        if s.doesIRSenseAnythingAtFront() and s.doesIRSenseAnythingAtSides():
-            print "IR is sensing at the front and the side."
-        elif s.doesIRSenseAnythingAtFront():
-            print "IR is sensing something at the front."
-        elif s.doesIRSenseAnythingAtSides():
-            print "IR is sensing something at the sides."
-        else:
-            print "Nothing sensed."
-        print "\n\n\n\n\n\n\n"
-        msleep(100)
-    sd()
-
-
-@print_function_name
 def test_cliffs(time=120):
     sec = seconds() + time
     while seconds() < sec:
@@ -402,15 +329,6 @@ def test_cliffs(time=120):
         print "\n\n\n\n\n\n\n"
         msleep(100)
     sd()
-
-
-@print_function_name
-def runtest():
-    create_connect()
-    m.base_forwards()
-    msleep(3000)
-    m.deactivate_motors()
-    create_disconnect()
 
 #--------------------------------------Variable Modifiers-------------------------------------------
 
