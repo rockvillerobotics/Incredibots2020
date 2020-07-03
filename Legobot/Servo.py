@@ -1,4 +1,5 @@
-from wombat import *
+import ctypes
+KIPR=ctypes.CDLL("/usr/lib/libkipr.so")
 from decorators import *
 
 class Servo:
@@ -33,7 +34,7 @@ class Servo:
                 pos = self.max_pos
             elif pos > self.min_pos:
                 pos = self.min_pos
-        set_servo_position(self.port, pos)
+        KIPR.set_servo_position(self.port, pos)
 
 
     def move(self, desired_pos, tics=3, ms=1):
@@ -41,11 +42,11 @@ class Servo:
         # Servo move speed = tics / ms
         # >18 tics is too high
         intermediate_position = get_servo_position(self.port)
-        print "Moving servo"
-        print get_servo_position(self.port) + " --> " + desired_pos
-        print "Speed = " + str(tics) + "/" + str(ms) + " tics per ms"
+        print("Moving servo")
+        print(get_servo_position(self.port) + " --> " + desired_pos)
+        print("Speed = " + str(tics) + "/" + str(ms) + " tics per ms")
         if tics > 18:
-            print "Tic value is too high\n"
+            print("Tic value is too high\n")
             u.sd()
         while abs(get_servo_position(self.port) - desired_pos) > 10:
             # Tolerance of +/- 10 included to account for servo value skipping
@@ -57,11 +58,11 @@ class Servo:
                 intermediate_position += tics
             else:
                 break
-            msleep(ms)
+            KIPPR.msleep(ms)
         self.set_pos(self.port, desired_pos)  # Ensures actual desired value is reached. Should be a minor point change
-        msleep(30)
-        print "Desired position reached. Curent position is %d" % get_servo_position(self.port)
-        print "Completed servo_slow\n"
+        KIPR.msleep(30)
+        print("Desired position reached. Curent position is %d" % get_servo_position(self.port))
+        print("Completed servo_slow\n")
 
 
     @print_function_name

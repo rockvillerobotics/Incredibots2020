@@ -1,9 +1,12 @@
 """Codes involving general motor or servo motion go here"""
-from wallaby import *
-from decorators import *
+import time as seconds
+import ctypes
+KIPR=ctypes.CDLL("/usr/lib/libkipr.so")
 from objects import *
+from decorators import *
 import constants as c
 import sensors as s
+import utils as u
 
 #------------------------------- Movement Commands-------------------------------
 
@@ -13,9 +16,9 @@ def drive_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
     if time == 0:
         should_stop = False
         time = c.SAFETY_TIME
-    wait_until(boolean_function, time)
+    u.wait_until(boolean_function, time)
     if should_stop:
-        m.deactivate_motors()
+        deactivate_motors()
 
 
 @print_function_name_with_arrows
@@ -23,7 +26,7 @@ def backwards_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
     """This function goes backwards until an event.
 
     Args:
-        boolean_function (function): The event you to go until reached
+        boolean_function (function): The event you go back for until reached
         time (number, optional): The code will automatically after this amount of time. This is to avoid infinite loops. Defaults to c.SAFETY_TIME.
         should_stop (bool, optional): The robot will stop after this code ends if this is true. Defaults to True.
     """
@@ -31,9 +34,9 @@ def backwards_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
     if time == 0:
         should_stop = False
         time = c.SAFETY_TIME
-    wait_until(boolean_function, time)
+    u.wait_until(boolean_function, time)
     if should_stop:
-        m.deactivate_motors()
+        deactivate_motors()
 
 
 @print_function_name_with_arrows
@@ -42,9 +45,9 @@ def turn_left_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
     if time == 0:
         should_stop = False
         time = c.SAFETY_TIME
-    wait_until(boolean_function, time)
+    u.wait_until(boolean_function, time)
     if should_stop:
-        m.deactivate_motors()
+        deactivate_motors()
 
 
 @print_function_name_with_arrows
@@ -53,22 +56,10 @@ def turn_right_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
     if time == 0:
         should_stop = False
         time = c.SAFETY_TIME
-    wait_until(boolean_function, time)
+    u.wait_until(boolean_function, time)
     if should_stop:
-        m.deactivate_motors()
-
-
-def stop_for(time=1000):  # Same as msleep command, but stops the wheels.
-    deactivate_motors()
-    msleep(time)
-    
-    
-def wait_until(boolean_function, time=c.SAFETY_TIME):
-    if time == 0:
-        time = c.SAFETY_TIME_NO_STOP
-    sec = seconds() + time / 1000.0
-    while seconds() < sec and not(boolean_function()):
-        msleep(1)
+        deactivate_motors()
+            
 #------------------------------- Base Commands -------------------------------
 #  These commands start the motors in a certain way. They are just activate motors but in a specific direction.
 
@@ -91,20 +82,20 @@ def base_backwards(speed_multiplier=1.0):
 
 # Shorthand for moving until time. Should stop is passed to the parent function.
 def drive(time, should_stop=True):
-    drive_until(time=time, should_stop=should_stop)
+    drive_until(u.always_false, time=time, should_stop=should_stop)
 
 
 def backwards(time, should_stop=True):
-    backwards_until(time=time, should_stop=should_stop)
+    backwards_until(u.always_false, time=time, should_stop=should_stop)
 
 
 # By default the turns will be 90 degree turns. The exact time value needs calibration.
 def turn_left(time=c.LEFT_TURN_TIME, should_stop=True):
-    turn_left_until(time=time, should_stop=should_stop)
+    turn_left_until(u.always_false, time=time, should_stop=should_stop)
 
 
 def turn_right(time=c.RIGHT_TURN_TIME, should_stop=True):
-    turn_right_until(time=time, should_stop=should_stop)
+    turn_right_until(u.always_false, time=time, should_stop=should_stop)
 
 #------------------------------- Basic Movement Commands -------------------------------
 # These commands are really the building blocks of the whole code. They're practical; they're
@@ -116,10 +107,10 @@ def activate_motors(left_motor_power=c.BASE_VALUE, right_motor_power=c.BASE_VALU
         left_motor_power = left_motor.base_power
     if right_motor_power == c.BASE_VALUE:
         right_motor_power = right_motor.base_power
-    if abs(left_motor_power - left_motor.current_power) > 600
+    if (abs(left_motor_power - left_motor.current_power) > 600
             or abs(right_motor_power - right_motor.current_power) > 600
             or left_motor.current_power == 0
-            or right_motor.current_power == 0:
+            or right_motor.current_power == 0):
         left_velocity_change = (left_motor_power - left_motor.current_power) / 30
         right_velocity_change = (right_motor_power - right_motor.current_power) / 30
         while abs(left_motor.current_power - left_motor_power) > 100 and abs(right_motor.current_power - right_motor_power) > 100:
@@ -127,7 +118,7 @@ def activate_motors(left_motor_power=c.BASE_VALUE, right_motor_power=c.BASE_VALU
             left_motor.set_power(new_power)
             new_power = right_motor.current_power + right_velocity_change
             right_motor.set_power(new_power)
-            msleep(1)
+            KIPR.msleep(1)
     left_motor.set_power(left_motor_power)
     right_motor.set_power(right_motor_power)  # Ensures actual desired value is reached.
 
@@ -184,27 +175,27 @@ def backwards_tics(tics, speed_multiplier=1.0, should_stop=True):
 # All these commands move the servo to a specified location at a specified speed.
 # The more tics per second, the faster the servo moves.
 
-def open_claw(tics=3, ms=1, servo_position=c.CLAW_OPEN_POS):
-    print "Open claw to desired position: %d" % servo_position
+def open_claw(tics=3, ms=1, servo_position=1024):
+    print("Open claw to desired position: %d" % servo_position)
     claw_servo.move(servo_pos, tics, ms)  # Checking for faulty values must go before setting position.
-    print "Claw opened to position: %d" % get_servo_position(c.CLAW_SERVO)
+    print("Claw opened to position: %d" % get_servo_position(c.CLAW_SERVO))
 
 
-def close_claw(tics=3, ms=1, servo_pos=c.CLAW_CLOSE_POS):
-    print "Close claw to desired position: %d" % servo_position
+def close_claw(tics=3, ms=1, servo_pos=1024):
+    print("Close claw to desired position: %d" % servo_position)
     claw_servo.move(servo_pos, tics, ms)
-    print "Claw closed to position: %d" % get_servo_position(c.CLAW_SERVO)
+    print("Claw closed to position: %d" % get_servo_position(c.CLAW_SERVO))
 
 
-def lift_arm(tics=3, ms=1, servo_pos=c.ARM_UP_POS):
-    print "Set arm servo to desired up position: %d" % servo_position
+def lift_arm(tics=3, ms=1, servo_pos=1024):
+    print("Set arm servo to desired up position: %d" % servo_position)
     arm_servo.move(servo_pos, tics, ms)
-    print "Arm reached up position: %d" % get_servo_position(c.ARM_SERVO)
+    print("Arm reached up position: %d" % get_servo_position(c.ARM_SERVO))
 
 
 def lower_arm(tics=3, ms=1, servo_pos=c.BASE_TIME):
-    print "Set arm servo to desired down position: %d" % servo_position
+    print("Set arm servo to desired down position: %d" % servo_position)
     if servo_position == c.BASE_TIME:
-        servo_position = c.ARM_DOWN_POS
+        servo_position = 1024
     arm_servo.move(servo_pos, tics, ms)
-    print "Arm reached down position: %d" % get_servo_position(c.ARM_SERVO)
+    print("Arm reached down position: %d" % get_servo_position(c.ARM_SERVO))

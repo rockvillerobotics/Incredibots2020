@@ -1,4 +1,6 @@
-from wallaby import *
+import ctypes
+KIPR=ctypes.CDLL("/usr/lib/libkipr.so")
+import time as seconds
 from decorators import *
 from objects import *
 import constants as c
@@ -24,15 +26,6 @@ def pressed_both():
 
 def unpressed_either():
     return not(pressed_left() or pressed_right())
-
-# -------------------------------Wait Until Event Commands--------------------
-
-def wait_until(boolean_function, time=c.SAFETY_TIME):
-    if time == 0:
-        time = c.SAFETY_TIME_NO_STOP
-    sec = seconds() + time / 1000.0
-    while seconds() < sec and not(boolean_function()):
-        msleep(1)
 
 # -------------------------------Basic Align Commands ------------------------
 
@@ -67,7 +60,7 @@ def align_far(left_first=True):
 #-----------------------Basic Gyro Commands---------------------------------------------    
 
 def get_change_in_angle():
-    return(gyro_z())
+    return(KIPR.gyro_z())
 
 #-----------------------Gyro-Based Movement Commands-------------------------------------
 # The gyro sensor can determine what angle the robot is at any given point in time. So, if the gyro sensor senses
@@ -82,8 +75,8 @@ def drive_gyro(time, should_stop=True):
     if time == 0:
         should_stop = False
         time = c.SAFETY_TIME
-    sec = seconds() + time / 1000.0
-    while seconds() < sec:
+    sec = seconds.time() + time / 1000.0
+    while seconds.time() < sec:
         left_speed = left_motor.base_power + (error + memory)
         right_speed = right_motor.base_power - (error + memory)
         m.activate_motors(left_speed, right_speed)
@@ -103,8 +96,8 @@ def backwards_gyro(time, should_stop=True):
     if time == 0:
         should_stop = False
         time = c.SAFETY_TIME
-    sec = seconds() + time / 1000.0
-    while seconds() < sec:
+    sec = seconds().time + time / 1000.0
+    while seconds().time < sec:
         left_speed = -left_motor.base_power + (error + memory)
         right_speed = -right_motor.base_power - (error + memory)
         m.activate_motors(left_speed, right_speed)
@@ -124,14 +117,14 @@ def turn_gyro(degrees, should_stop=True):
     target_angle = degrees * c.DEGREE_CONVERSION_RATE
     if target_angle > 0:
         m.base_turn_left()
-        sec = seconds() + c.SAFETY_TIME
-        while angle < target_angle and seconds() < sec:
+        sec = seconds().time + c.SAFETY_TIME
+        while angle < target_angle and seconds.time() < sec:
             msleep(10)
             angle += (get_change_in_angle() - u.gyro_bias) * 10
     else:
         m.base_turn_right()
-        sec = seconds() + c.SAFETY_TIME
-        while angle > target_angle and seconds() < sec:
+        sec = seconds().time + c.SAFETY_TIME
+        while angle > target_angle and seconds.time() < sec:
             msleep(10)
             angle += (get_change_in_angle() - u.gyro_bias) * 10
     if should_stop:
@@ -139,12 +132,12 @@ def turn_gyro(degrees, should_stop=True):
 
 
 def turn_left_gyro(degrees=90, should_stop=True):
-    print "Starting turn_left_gyro() for " + str(degrees) + " degrees"
+    print("Starting turn_left_gyro() for " + str(degrees) + " degrees")
     turn_gyro(degrees, should_stop)
 
 
 def turn_right_gyro(degrees=90, should_stop=True):
-    print "Starting turn_right_gyro() for " + str(degrees) + " degrees"
+    print("Starting turn_right_gyro() for " + str(degrees) + " degrees")
     turn_gyro(-degrees, should_stop)
 
 
@@ -239,7 +232,7 @@ def backwards_gyro_through_line_third(time=c.SAFETY_TIME, should_stop=True):
 @print_function_name
 def drive_gyro_to_line_left(time=c.SAFETY_TIME, should_stop=True):
     drive_gyro_until(left.senses_white, should_stop=False)
-    drive_gyro_until(left.senses_black, (time, should_stop)
+    drive_gyro_until(left.senses_black, time, should_stop)
 
 
 @print_function_name
@@ -275,13 +268,13 @@ def backwards_gyro_to_line_third(time=c.SAFETY_TIME, should_stop=True):
 
 def initialize_camera():
     # Wait two seconds for camera to initialize
-    print "Initializing Camera"
+    print("Initializing Camera")
     i = 0  # Counter
-    print "Starting Step 1..."
+    print("Starting Step 1...")
     while i < 55:
         camera_update()
         i += 1
         msleep(1)
-    print "Finished Step 100\n"
+    print("Finished Step 100\n")
 
 #----------------New Stuff-------------------

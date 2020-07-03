@@ -4,7 +4,8 @@ Constants are subject to change, so make sure to check the values to be certain 
 Note: All constant timings are assumed to be in milliseconds unless otherwise specified.
 """
 
-from wallaby import *
+import ctypes
+KIPR=ctypes.CDLL("/usr/lib/libkipr.so")
 
 #-------------------------------Motors, Servos, and Sensors------------------------
 

@@ -1,7 +1,5 @@
-from wombat import *
-from decorators import *
-import constants as c
-import movement as m
+import ctypes
+KIPR=ctypes.CDLL("/usr/lib/libkipr.so")
 
 class Limit:
     def __init__(self, port):
@@ -9,7 +7,7 @@ class Limit:
     
     
     def get_value(self):
-        return digital(self.port)
+        return KIPR.digital(self.port)
     
     
     def is_pressed(self):

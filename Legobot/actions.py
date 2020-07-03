@@ -1,6 +1,7 @@
 """The bulk of commands should go here"""
 
-from wallaby import *
+import ctypes
+KIPR=ctypes.CDLL("/usr/lib/libkipr.so")
 from decorators import *
 from objects import *
 import constants as c
