@@ -6,6 +6,7 @@ import objects as o
 import Motor as M
 
 class Tophat:
+    
     refresh_rate = 30
     all_tophats = []
     
@@ -22,34 +23,27 @@ class Tophat:
         self.tophat_type = tophat_type
         Tophat.all_tophats.append(self)
 
-            
     def get_value(self):
         return KIPR.analog(self.port)
 
-
     def get_value_midpoint(self):
         return KIPR.self.value_midpoint
-        
 
     def senses_black(self):
         return self.get_value() < self.value_midpoint
-    
-    
+
     def senses_white(self):
         return self.get_value() > self.value_midpoint
-    
-    
+
     def compare_and_replace_extremes(self):
         if self.get_value() > self.black_value:
             self.black_value = self.get_value()
         elif self.get_value() < self.white_value:
             self.white_value = self.get_value()
-    
-    
+
     def determine_midpoint_from_extremes(self, bias):
         self.set_value_midpoint((self.black_value + self.white_value) / 2 + bias)
 
-        
     def lfollow(self, time, mode=c.STANDARD, should_stop=True, bias=0):
         target = 100.0 * (self.value_midpoint - self.white_value) / (self.black_value - self.white_value) + bias
         last_error = 0
@@ -84,7 +78,6 @@ class Tophat:
         if should_stop:
             M.Motor.deactivate_motors()
 
-    
     def lfollow_until(self, boolean_function, mode=c.STANDARD, should_stop=True, bias=0, *, time=c.SAFETY_TIME):
         target = 100.0 * (self.value_midpoint - self.white_value) / (self.black_value - self.white_value) + bias
         last_error = 0
@@ -119,7 +112,6 @@ class Tophat:
         if should_stop:
             M.Motor.deactivate_motors()
 
-
     def lfollow_choppy(self, time, should_stop=True):
         left_motor = M.Motor.all_motors[0]
         right_motor = M.Motor.all_motors[1]
@@ -134,4 +126,3 @@ class Tophat:
             KIPR.msleep(30)
         if should_stop:
             M.Motor.deactivate_motors()
-        

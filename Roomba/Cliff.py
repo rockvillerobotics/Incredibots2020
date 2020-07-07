@@ -4,7 +4,7 @@ import constants as c
 import movement as m
 
 class Cliff:
-    
+
     all_cliffs = []
     
     def __init__(self, get_value_function, side):
@@ -14,27 +14,22 @@ class Cliff:
         self.value_midpoint = -1
         self.side = side
         Cliff.all_cliffs.append(self)    
-    
-        
+
     def get_value(self):
         # Gets value that the cliff currently reads.
         return self.get_value_function()
-    
-    
+
     def get_value_midpoint(self):
         # Gets the value midpoint of the cliff.
         return self.value_midpoint
-    
-    
+
     def senses_black(self):
         # Returns whether or not the cliff senses black.
         return self.get_value < self.value_midpoint
-    
-    
+
     def senses_white(self):
         # Returns whether or not the cliff senses white.
         return self.get_value < self.value_midpoint
-    
 
 # ------------------------- Lfollow Commands ----------------------------------
 # The roomba hugs onto a line with a cliff as it moves forward.
@@ -71,7 +66,6 @@ class Cliff:
             msleep(1)
         if should_stop:
             m.deactivate_motors()
-
 
     @print_function_name
     def lfollow_until(self, boolean_function, mode=c.STANDARD, bias=10, *, should_stop=True, time=c.SAFETY_TIME):
@@ -121,9 +115,9 @@ class Cliff:
             msleep(refresh_rate)
         if should_stop:
             m.deactivate_motors()
-    
+
     #------------------- Basic Movement Until Black/White ------------------------------
-    
+
     @print_function_name
     def forward_until_black(self, should_stop=True, *, time=c.SAFETY_TIME):
         m.base_forward()
@@ -132,8 +126,7 @@ class Cliff:
             msleep(1)
         if should_stop:
             m.deactivate_motors()
-    
-    
+
     @print_function_name
     def forward_until_white(self, should_stop=True, *, time=c.SAFETY_TIME):
         m.base_forward()
@@ -142,8 +135,7 @@ class Cliff:
             msleep(1)
         if should_stop:
             m.deactivate_motors()
-    
-    
+
     @print_function_name
     def backwards_until_black(self, should_stop=True, *, time=c.SAFETY_TIME):
         m.base_backwards()
@@ -152,8 +144,7 @@ class Cliff:
             msleep(1)
         if should_stop:
             m.deactivate_motors()
-    
-    
+
     @print_function_name
     def backwards_until_white(self, should_stop=True, *, time=c.SAFETY_TIME):
         m.base_backwards()
@@ -162,31 +153,27 @@ class Cliff:
             msleep(1)
         if should_stop:
             m.deactivate_motors()
-    
+
     #------------------- Basic Movement Through/Until Lines ------------------------------
-    
+
     @print_function_name
     def forward_through_line(self, should_stop=True, *, time=c.SAFETY_TIME):
         self.forward_until_black(should_stop=False)
         self.forward_until_white(should_stop, time=time)
-        
-    
+
     @print_function_name
     def forward_until_line(self, should_stop=True, *, time=c.SAFETY_TIME):
         self.forward_until_white(should_stop=False)
         self.forward_until_black(should_stop, time=time)
-
 
     @print_function_name
     def backwards_through_line(self, should_stop=True, *, time=c.SAFETY_TIME):
         self.backwards_until_black(should_stop=False)
         self.backwards_until_white(should_stop, time=time)
 
-
     @print_function_name
     def backwards_until_line(self, should_stop=True, *, time=c.SAFETY_TIME):
         self.backwards_until_white(should_stop=False)
         self.backwards_until_black(should_stop, time=time)
 
-    
         
