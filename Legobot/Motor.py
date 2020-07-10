@@ -4,6 +4,7 @@ from decorators import *
 import constants as c
 
 class Motor:
+    
     all_motors = []
     
     # Consider these "private variables"
@@ -15,12 +16,10 @@ class Motor:
         self.full_power = base_power
         self.direction = direction
         Motor.all_motors.append(self)
-        
 
     # This is relative to a forward direction. Current power 
     def get_power(self):
         return self.current_power
-
 
     def set_power(self, power):
         if power > 1450:
@@ -30,22 +29,18 @@ class Motor:
         KIPR.mav(self.port, int(self.direction * power))
         self.current_power = int(self.direction * power)
 
-    
     def set_reference_powers(self, new_reference_power):
         self.base_power = new_reference_power
         self.full_power = new_reference_power
         self.half_power = new_reference_power / 2
 
-
     # This is relative to a forward direction.
     def get_tics(self):
         return KIPR.gmpc(self.port) * self.direction
 
-
     def clear_tics(self):
         KIPR.cmpc(self.port)
-    
-    
+
     def accelerate_to(self, desired_power):
         if desired_power < 1 and desired_power >= 0:
             desired_power = 1
@@ -63,11 +58,9 @@ class Motor:
                 KIPR.msleep(1)
         self.set_power(desired_power)  # Ensures actual desired value is reached
 
-
     # TODO add decelleration
     def stop(self):
         self.set_power(0)
-
 
     @print_function_name_with_arrows
     def forwards_until(self, boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
@@ -78,8 +71,7 @@ class Motor:
             KIPR.msleep(1)
         if should_stop:
             self.stop()
-    
-    
+
     @print_function_name_with_arrows
     def backwards_until(self, boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
         # Left motor goes forwards until right tophat senses black
@@ -89,8 +81,7 @@ class Motor:
             KIPR.msleep(1)
         if should_stop:
             self.stop()
-            
-            
+
     # This function treats the motor like a servo.
     @print_function_name_with_arrows
     def move(self, desired_tic_location, desired_speed):
@@ -116,7 +107,7 @@ class Motor:
             self.set_power(speed)
             KIPR.msleep(1)
         self.stop()
-    
+
     #------------------------------- Static Two-Motor Commands -------------------------------
     # These commands are really the building blocks of the whole code. They're practical; they're
     # built to be used on a daily basis. If you're going to copy something of our code, I would suggest that it be this
@@ -143,7 +134,6 @@ class Motor:
                 KIPR.msleep(1)
         left_motor.set_power(left_motor_power)
         right_motor.set_power(right_motor_power)  # Ensures actual desired value is reached.
-
 
     def deactivate_motors():
         left_motor = Motor.all_motors[0]

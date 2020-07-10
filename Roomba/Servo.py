@@ -2,10 +2,11 @@ from wombat import *
 from decorators import *
 
 class Servo:
+
     universal_max_pos = 1950
     universal_min_pos = 50
     all_servos = []
-    
+
     def __init__(self, port, starting_pos=1024, max_pos=universal_max_pos, min_pos=universal_min_pos):
         self.port = port
         self.max_pos = max_pos
@@ -16,11 +17,9 @@ class Servo:
         else:
             self.direction = -1
         Servo.all_servos.append(port)
-            
 
     def get_pos(self):
         return get_servo_position(self.port)
-
 
     def set_pos(self, pos):
         if direction == 1:
@@ -34,7 +33,6 @@ class Servo:
             elif pos > self.min_pos:
                 pos = self.min_pos
         set_servo_position(self.port, pos)
-
 
     def move(self, desired_pos, tics=3, ms=1):
         # Moves a servo to a given position from its current position. The servo and desired position must be specified.
@@ -63,25 +61,21 @@ class Servo:
         print "Desired position reached. Curent position is %d" % get_servo_position(self.port)
         print "Completed servo_slow\n"
 
-
     @print_function_name
     def move_up(self, tics):
         desired_pos = get_servo_position(self.port) + tics * self.direction
         self.move_servo(desired_pos)
 
-
     @print_function_name
     def move_down(self):
         desired_pos = get_servo_position(self.port) - tics * self.direction
         self.move_servo(desired_pos)
-        
-        
+
     @print_function_name
     def move_right(self):
         desired_pos = get_servo_position(self.port) + tics * self.direction
         self.move_servo(desired_pos)
-        
-    
+
     @print_function_name
     def move_left(self):
         desired_pos = get_servo_position(self.port) - tics * self.direction
