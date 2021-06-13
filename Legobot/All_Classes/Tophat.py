@@ -27,7 +27,7 @@ class Tophat:
         return KIPR.analog(self.port)
 
     def get_value_midpoint(self):
-        return KIPR.self.value_midpoint
+        return self.value_midpoint
 
     def senses_black(self):
         return self.get_value() < self.value_midpoint
