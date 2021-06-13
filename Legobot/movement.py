@@ -12,6 +12,13 @@ import utils as u
 
 @print_function_name_with_arrows
 def drive_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
+    """This function goes forwards until an event.
+
+    Args:
+        boolean_function (function): The event you go back for until reached.
+        time (number, optional): The code will automatically after this amount of time. This is to avoid infinite loops. Defaults to c.SAFETY_TIME.
+        should_stop (bool, optional): The robot will stop after this code ends if this is true. Defaults to True.
+    """
     base_drive()
     if time == 0:
         should_stop = False
@@ -26,7 +33,7 @@ def backwards_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
     """This function goes backwards until an event.
 
     Args:
-        boolean_function (function): The event you go back for until reached
+        boolean_function (function): The event you go back for until reached.
         time (number, optional): The code will automatically after this amount of time. This is to avoid infinite loops. Defaults to c.SAFETY_TIME.
         should_stop (bool, optional): The robot will stop after this code ends if this is true. Defaults to True.
     """
