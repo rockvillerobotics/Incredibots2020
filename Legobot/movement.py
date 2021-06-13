@@ -11,61 +11,77 @@ import utils as u
 #------------------------------- Movement Commands-------------------------------
 
 @print_function_name_with_arrows
-def drive_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
+def drive_until(boolean_function, *, time=c.SAFETY_TIME, use_gyro=False, should_stop=True):
     """This function goes forwards until an event.
 
     Args:
         boolean_function (function): The event you go back for until reached.
         time (number, optional): The code will automatically after this amount of time. This is to avoid infinite loops. Defaults to c.SAFETY_TIME.
+        use_gyro (bool, optional): The robot will use an internal gyro to straighten its driving. Defaults to False.
         should_stop (bool, optional): The robot will stop after this code ends if this is true. Defaults to True.
     """
-    base_drive()
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    u.wait_until(boolean_function, time)
-    if should_stop:
-        deactivate_motors()
+    if(use_gyro):
+        gyro.drive_gyro_until(boolean_function, time=time, should_stop=should_stop)
+    else:    
+        base_drive()
+        if time == 0:
+            should_stop = False
+            time = c.SAFETY_TIME
+        u.wait_until(boolean_function, time)
+        if should_stop:
+            deactivate_motors()
 
 
 @print_function_name_with_arrows
-def backwards_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
+def backwards_until(boolean_function, *, time=c.SAFETY_TIME, use_gyro=False, should_stop=True):
     """This function goes backwards until an event.
 
     Args:
         boolean_function (function): The event you go back for until reached.
         time (number, optional): The code will automatically after this amount of time. This is to avoid infinite loops. Defaults to c.SAFETY_TIME.
+        use_gyro (bool, optional): The robot will use an internal gyro to straighten its driving. Defaults to False.
         should_stop (bool, optional): The robot will stop after this code ends if this is true. Defaults to True.
     """
-    base_backwards()
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    u.wait_until(boolean_function, time)
-    if should_stop:
-        deactivate_motors()
+    if(use_gyro):
+        gyro.backwards_gyro_until(boolean_function, time=time, should_stop=should_stop)
+    else:    
+        base_backwards()
+        if time == 0:
+            should_stop = False
+            time = c.SAFETY_TIME
+        u.wait_until(boolean_function, time)
+        if should_stop:
+            deactivate_motors()
 
 
 @print_function_name_with_arrows
-def turn_left_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
-    base_turn_left()
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    u.wait_until(boolean_function, time)
-    if should_stop:
-        deactivate_motors()
+def turn_left_until(boolean_function, *, time=c.SAFETY_TIME, degrees=0, should_stop=True):
+    if(degrees != 0):
+        stop_or_not = should_stop
+        gyro.turn_left_gyro(degrees, should_stop=stop_or_not)
+    else:    
+        base_turn_left()
+        if time == 0:
+            should_stop = False
+            time = c.SAFETY_TIME
+        u.wait_until(boolean_function, time)
+        if should_stop:
+            deactivate_motors()
 
 
 @print_function_name_with_arrows
-def turn_right_until(boolean_function, *, time=c.SAFETY_TIME, should_stop=True):
-    base_turn_right()
-    if time == 0:
-        should_stop = False
-        time = c.SAFETY_TIME
-    u.wait_until(boolean_function, time)
-    if should_stop:
-        deactivate_motors()
+def turn_right_until(boolean_function, *, time=c.SAFETY_TIME, degrees=0, should_stop=True):
+    if(degrees != 0):
+        stop_or_not = should_stop
+        gyro.turn_right_gyro(degrees, should_stop=stop_or_not)
+    else:
+        base_turn_right()
+        if time == 0:
+            should_stop = False
+            time = c.SAFETY_TIME
+        u.wait_until(boolean_function, time)
+        if should_stop:
+            deactivate_motors()
             
 #------------------------------- Base Commands -------------------------------
 #  These commands start the motors in a certain way. They are just activate motors but in a specific direction.

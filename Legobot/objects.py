@@ -1,3 +1,4 @@
+from Legobot.All_Classes.Gyro_Class import Gyro
 import ctypes
 KIPR=ctypes.CDLL("/usr/lib/libkipr.so")
 from Motor import Motor
@@ -46,6 +47,13 @@ if IS_MAIN_BOT:
     right = Tophat(2, location=(c.RIGHT, c.FRONT), tophat_type=c.BIG_TOPHAT)
     third = Tophat(3, location=(c.LEFT, c.BACK), tophat_type=c.SMALL_TOPHAT)
 
+    #---------------Gyro Objects------------------
+    # Ex: gyro_name = Gyro(get_angle_function=gyro_z)
+    # Parameters: get_angle_function
+    #   As of 2021, the get_angle_function's are: gyro_z, gyro_x, and gyro_y.
+    
+    gyro = Gyro(gyro_z) 
+    
     #---------------Depth Objects--------------------
     # Ex: depth_name = Depth(port, value_midpoint)
     # Parameters: port, value midpoint
@@ -71,12 +79,21 @@ elif IS_CLONE_BOT:
     # Parameters: port, starting_value
 
 
+    
     #---------------Tophat Objects------------------
     # Ex: tophat_name = Tophat(port, location=(c.LOCATION, c.LOCATION), tophat_type=c.TYPE)
     # Parameters: port, location, tophat_type
     #   Locations are LEFT, RIGHT, FRONT, and BACK. These help make lfollows
     #   work the way you want. Tophat_types are BIG_TOPHAT and SMALL_TOPHAT
 
+
+
+    #---------------Gyro Objects------------------
+    # Ex: gyro_name = Gyro(get_angle_function=gyro_z)
+    # Parameters: get_angle_function
+    #   As of 2021, the get_angle_function's are: gyro_z, gyro_x, and gyro_y.
+    
+    gyro = Gyro(gyro_z) 
 
     #---------------Depth Objects--------------------
     # Ex: depth_name = Depth(port, value_midpoint)
